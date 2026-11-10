@@ -1,5 +1,5 @@
 import type { ComposeService } from "./compose.js";
-import { findApp, isAtLeastVersion, parseImage } from "./matcher.js";
+import { findApp, findMirroredApp, isAtLeastVersion, parseImage } from "./matcher.js";
 import type { AppEntry, EnvMethod, EnvPair, TelemetryDefault } from "./types.js";
 
 export const CONTRIBUTING_URL = "https://github.com/Umerrrdo/phonehome/blob/main/CONTRIBUTING.md";
@@ -16,6 +16,8 @@ export type Status =
   /** The image tag is at or above the version where the default became off. */
   | "fixed"
   | "not-in-database"
+  /** The image name uses a variable that is not set, so it could not be looked up. */
+  | "unresolved-image"
   | "no-image";
 
 export interface ServiceResult {
@@ -42,11 +44,16 @@ export interface ServiceResult {
   fixed_in: string | null;
   notes: string | null;
   sources: string[];
+  /** For an image on a private registry or mirror: the entry it looks like. A hint only. */
+  possible_match: string | null;
+  /** Things in this service's settings that look like a mistake. */
+  problems: string[];
 }
 
 function valueMatches(actual: string | undefined, pair: EnvPair): boolean {
   if (actual === undefined) return false;
-  const have = actual.trim().toLowerCase();
+  // No trimming: a stray space or quote reaches the app as part of the value.
+  const have = actual.toLowerCase();
   return [pair.value, ...(pair.accepted_values ?? [])].some((v) => v.toLowerCase() === have);
 }
 
@@ -85,10 +92,14 @@ export function evaluate(
   const detected: string[] = [];
   const missing: EnvMethod[] = [];
 
+  const problems: string[] = [];
   for (const method of required) {
     const hit = satisfiedBy(method, env);
     if (hit) detected.push(hit);
-    else missing.push(method);
+    else {
+      missing.push(method);
+      problems.push(...nearMisses(service, method, env));
+    }
   }
   for (const method of app.disable) {
     if (method.type === "flag" && commandHasFlag(command, method.flag)) detected.push(method.flag);
@@ -126,14 +137,40 @@ export function evaluate(
     fixed_in: app.fixed_in ?? null,
     notes: app.notes ?? null,
     sources: app.sources,
+    possible_match: null,
+    problems,
   };
 }
 
-function unmatched(service: string, image: string | null): ServiceResult {
+const QUOTED = /^(["'])(.*)\1$/;
+
+/** Explains a value that looks like an opt-out but will not work as one. */
+function nearMisses(service: string, method: EnvMethod, env: Map<string, string | undefined>): string[] {
+  const out: string[] = [];
+  for (const pair of [method, ...(method.alternatives ?? [])]) {
+    if (!env.has(pair.name)) continue;
+    const actual = env.get(pair.name);
+    if (actual === undefined) {
+      out.push(`service "${service}": ${pair.name} is passed through from the host without a value, so phonehome cannot tell if it is set. Give it a value in the compose file.`);
+    } else if (valueMatches(actual.trim().replace(QUOTED, "$2").trim(), pair)) {
+      out.push(
+        `service "${service}": ${pair.name} is set to [${actual}] with extra quote characters or spaces. Compose passes them to the app as part of the value, so it does not count as ${pair.value}. Write it as ${pair.name}=${pair.value}.`,
+      );
+    }
+  }
+  return out;
+}
+
+function unmatched(
+  service: string,
+  image: string | null,
+  status: Status = image === null ? "no-image" : "not-in-database",
+  possible: string | null = null,
+): ServiceResult {
   return {
     service,
     image,
-    status: image === null ? "no-image" : "not-in-database",
+    status,
     ok: true,
     app: null,
     slug: null,
@@ -149,6 +186,8 @@ function unmatched(service: string, image: string | null): ServiceResult {
     fixed_in: null,
     notes: null,
     sources: [],
+    possible_match: possible,
+    problems: [],
   };
 }
 
@@ -156,7 +195,12 @@ export function scanServices(services: ComposeService[], apps: AppEntry[]): Serv
   return services.map((svc) => {
     if (!svc.image) return unmatched(svc.name, null);
     const app = findApp(svc.image, apps);
-    if (!app) return unmatched(svc.name, svc.image);
+    if (!app) {
+      // An unset variable in the name part means the real image is not known.
+      const nameUnknown = svc.unsetImageVars !== undefined && parseImage(svc.image).name.includes("$");
+      if (nameUnknown) return unmatched(svc.name, svc.image, "unresolved-image");
+      return unmatched(svc.name, svc.image, "not-in-database", findMirroredApp(svc.image, apps)?.images[0] ?? null);
+    }
     return evaluate(svc.name, svc.image, app, svc.env, svc.command);
   });
 }
@@ -164,7 +208,7 @@ export function scanServices(services: ComposeService[], apps: AppEntry[]): Serv
 /** Looks up one image with nothing set, as `phonehome check` does. */
 export function checkImage(image: string, apps: AppEntry[]): ServiceResult {
   const app = findApp(image, apps);
-  if (!app) return unmatched(image, image);
+  if (!app) return unmatched(image, image, "not-in-database", findMirroredApp(image, apps)?.images[0] ?? null);
   return evaluate(image, image, app, new Map(), "");
 }
 

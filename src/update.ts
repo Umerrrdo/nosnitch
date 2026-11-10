@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { cacheDbPath, validateDatabase } from "./db.js";
+import { PhonehomeError } from "./errors.js";
 import type { Database } from "./types.js";
 
 export const UPDATE_URL = "https://raw.githubusercontent.com/Umerrrdo/phonehome/main/db/index.json";
@@ -10,11 +11,20 @@ export const UPDATE_URL = "https://raw.githubusercontent.com/Umerrrdo/phonehome/
  * touches the network, and it only runs when the user passes --update.
  */
 export async function updateDatabase(url: string = process.env.PHONEHOME_UPDATE_URL ?? UPDATE_URL): Promise<number> {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`could not download the database: HTTP ${res.status} from ${url}`);
-  const db = (await res.json()) as Database;
+  const keep = "phonehome keeps using the database it already has, so you can run the same command without --update.";
+  let db: Database;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new PhonehomeError(`Could not download the database: the server answered HTTP ${res.status} for ${url}`, keep);
+    db = (await res.json()) as Database;
+  } catch (err) {
+    if (err instanceof PhonehomeError) throw err;
+    throw new PhonehomeError(`Could not download the database from ${url}: ${(err as Error).message}`, `Check your internet connection. ${keep}`);
+  }
   const problems = validateDatabase(db);
-  if (problems.length > 0) throw new Error(`downloaded database is not valid, keeping the current one:\n${problems.slice(0, 5).join("\n")}`);
+  if (problems.length > 0) {
+    throw new PhonehomeError(`The downloaded database is not valid, so it was not saved:\n${problems.slice(0, 5).join("\n")}`, keep);
+  }
   const target = cacheDbPath();
   mkdirSync(dirname(target), { recursive: true });
   writeFileSync(target, JSON.stringify(db));

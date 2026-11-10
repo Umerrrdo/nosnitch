@@ -51,7 +51,7 @@ test("--fix writes nothing when there is nothing to fix", () => {
   const res = run(["scan", join(dir, "compose.yml"), "--fix"]);
   assert.equal(res.status, 0);
   assert.equal(existsSync(join(dir, "compose.phonehome.override.yml")), false);
-  assert.match(res.stdout, /Nothing to write/);
+  assert.match(res.stdout, /No override file written/);
 });
 
 test("unverified entries are written with a warning comment", () => {

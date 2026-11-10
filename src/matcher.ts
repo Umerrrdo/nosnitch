@@ -41,12 +41,30 @@ export function parseImage(image: string): ImageRef {
   return { name: parts.join("/"), ...(tag ? { tag } : {}), ...(digest ? { digest } : {}) };
 }
 
+const patternCache = new Map<string, RegExp>();
+
 function patternToRegExp(pattern: string): RegExp {
+  const cached = patternCache.get(pattern);
+  if (cached) return cached;
   const escaped = parseImage(pattern)
     .name.split("*")
     .map((part) => part.replace(/[.+?^${}()|[\]\\]/g, "\\$&"))
     .join(".*");
-  return new RegExp(`^${escaped}$`);
+  const compiled = new RegExp(`^${escaped}$`);
+  patternCache.set(pattern, compiled);
+  return compiled;
+}
+
+/**
+ * For an image on a private registry or mirror: the entry it would match if the
+ * registry host were removed. Used only to print a hint, never to decide a status.
+ */
+export function findMirroredApp(image: string, apps: AppEntry[]): AppEntry | undefined {
+  const parts = parseImage(image).name.split("/");
+  const first = parts[0] ?? "";
+  if (parts.length < 2 || !(first.includes(".") || first.includes(":") || first === "localhost")) return undefined;
+  const rest = parts.slice(1);
+  return findApp(rest.join("/"), apps) ?? (rest.length > 1 ? findApp(rest.slice(1).join("/"), apps) : undefined);
 }
 
 export function matchesPattern(image: string, pattern: string): boolean {

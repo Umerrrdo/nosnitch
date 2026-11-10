@@ -3,6 +3,8 @@ slug: langfuse
 images:
   - langfuse/langfuse
   - langfuse/langfuse-worker
+  - docker.langfuse.com/langfuse/langfuse
+  - docker.langfuse.com/langfuse/langfuse-worker
 telemetry_default: "on"
 destinations:
   - eu.posthog.com
@@ -15,5 +17,6 @@ disable:
     note: Set it on every Langfuse application container.
 sources:
   - https://langfuse.com/self-hosting/security/telemetry
+  - https://github.com/langfuse/langfuse/blob/main/docker-compose.yml
 verified_on: "2026-11-11"
 verified: true

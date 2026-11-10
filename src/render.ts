@@ -18,6 +18,11 @@ function shorten(text: string, max = 70): string {
   return text.length > max ? `${text.slice(0, max - 3)}...` : text;
 }
 
+/** Digests are 71 characters of noise in a table. The JSON output keeps them whole. */
+function shortImage(image: string | null): string {
+  return image === null ? "-" : image.replace(/@sha256:([0-9a-f]{8})[0-9a-f]+/, "@sha256:$1...");
+}
+
 function defaultCell(r: ServiceResult): string {
   if (r.telemetry_default === null) return "-";
   return r.verified ? r.telemetry_default : `${r.telemetry_default} (unverified)`;
@@ -27,6 +32,8 @@ function fixCell(r: ServiceResult): string {
   switch (r.status) {
     case "not-in-database":
       return "not in database";
+    case "unresolved-image":
+      return "image name uses an unset variable";
     case "no-image":
       return "no image (built locally)";
     case "off":
@@ -49,7 +56,7 @@ export function renderScan(results: ServiceResult[], warnings: string[]): string
   out.push(
     table(
       ["SERVICE", "IMAGE", "TELEMETRY DEFAULT", "DESTINATIONS", "FIX"],
-      results.map((r) => [r.service, r.image ?? "-", defaultCell(r), r.destinations.join("\n") || "-", fixCell(r)]),
+      results.map((r) => [r.service, shortImage(r.image), defaultCell(r), r.destinations.join("\n") || "-", fixCell(r)]),
     ),
   );
 
@@ -69,16 +76,26 @@ export function renderScan(results: ServiceResult[], warnings: string[]): string
   }
   for (const r of residual) out.push(`${r.service}: still sent after opting out: ${r.still_sent}`);
   if (unknownImages.length > 0) {
-    out.push(`Not in database: ${unknownImages.map((r) => r.image).join(", ")}`);
-    out.push(`  Know how one of these behaves? Add it: ${CONTRIBUTING_URL}`);
+    const names = [...new Set(unknownImages.map((r) => shortImage(r.image)))];
+    out.push(`Not in database (${names.length}): ${names.join(", ")}`);
+    out.push(`  phonehome does not guess. Know how one of these behaves? Add it: ${CONTRIBUTING_URL}`);
   }
-  for (const w of warnings) out.push(`warning: ${w}`);
+  for (const r of unknownImages.filter((x) => x.possible_match)) {
+    out.push(`${r.service}: looks like a mirror of ${r.possible_match}. Mirrors are not matched automatically. Run: phonehome check ${r.possible_match}`);
+  }
+  for (const r of results.filter((x) => x.status === "unresolved-image")) {
+    out.push(`${r.service}: the image name ${r.image} uses a variable that is not set. Set it in your shell or in the .env file next to the compose file, then scan again.`);
+  }
+  for (const w of [...results.flatMap((r) => r.problems), ...warnings]) out.push(`warning: ${w}`);
   return out.join("\n");
 }
 
 export function renderCheck(r: ServiceResult): string {
+  if (r.status === "not-in-database" && r.possible_match) {
+    return `${r.image}: not in database.\nIt looks like a mirror of ${r.possible_match}. Mirrors are not matched automatically. Run: phonehome check ${r.possible_match}`;
+  }
   if (r.status === "not-in-database") {
-    return `${r.image}: not in database.\nphonehome does not guess. Add it: ${CONTRIBUTING_URL}`;
+    return`${r.image}: not in database.\nphonehome does not guess. Add it: ${CONTRIBUTING_URL}`;
   }
   const out: string[] = [];
   out.push(`${r.app} (${r.image})`);
