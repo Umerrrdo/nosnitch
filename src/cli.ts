@@ -90,6 +90,13 @@ function parse(argv: string[]) {
 }
 
 async function main(argv: string[]): Promise<number> {
+  const nodeMajor = Number(process.versions.node.split(".")[0]);
+  if (nodeMajor < 20) {
+    throw new PhonehomeError(
+      `phonehome needs Node 20 or newer. This is Node ${process.versions.node}.`,
+      "Install a current Node from https://nodejs.org, or use the Docker image (see the README).",
+    );
+  }
   const { values, positionals } = parse(argv);
   const [command, ...rest] = positionals;
 

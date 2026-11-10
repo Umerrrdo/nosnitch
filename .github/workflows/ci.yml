@@ -13,10 +13,12 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: test (${{ matrix.os }}, node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         node: [20, 22]
     steps:
       - uses: actions/checkout@v4
@@ -51,3 +53,8 @@ jobs:
           set +e
           docker run --rm --network none -v "$PWD/test/fixtures:/work:ro" phonehome scan example-compose.yml
           test $? -eq 1
+      - name: Write the override from inside the image
+        run: |
+          mkdir demo && cp test/fixtures/example-compose.yml demo/docker-compose.yml && cp test/fixtures/langfuse.env demo/
+          docker run --rm --network none --user "$(id -u):$(id -g)" -v "$PWD/demo:/work" phonehome scan --fix || true
+          docker compose -f demo/docker-compose.yml -f demo/compose.phonehome.override.yml config --quiet

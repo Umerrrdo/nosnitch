@@ -8,16 +8,20 @@ phonehome itself has no telemetry, no accounts and no hosted service. It makes z
 
 ## Quickstart (30 seconds)
 
-You need Node 20 or newer.
+You need Node 20 or newer and git. Run this in the folder that holds your compose file:
 
 ```sh
-npx github:Umerrrdo/phonehome scan docker-compose.yml
+npx github:Umerrrdo/phonehome scan
 ```
+
+Without a file name, phonehome looks for `compose.yaml`, `compose.yml`, `docker-compose.yaml` or `docker-compose.yml`, in that order, the same as Docker Compose. You can also pass the file: `npx github:Umerrrdo/phonehome scan path/to/docker-compose.yml`.
+
+The first run takes a little longer because npx downloads and builds the tool.
 
 Then let it write the fix and apply it:
 
 ```sh
-npx github:Umerrrdo/phonehome scan docker-compose.yml --fix
+npx github:Umerrrdo/phonehome scan --fix
 docker compose -f docker-compose.yml -f compose.phonehome.override.yml up -d
 ```
 
@@ -43,8 +47,8 @@ internal-api             -                                                  -   
 
 3 service(s) send telemetry by default and are not opted out: n8n, hasura, immich-machine-learning
 langfuse-web: still sent after opting out: Enterprise self-hosted telemetry is used for license compliance and cannot be disabled.
-Not in database: postgres:16-alpine
-  Know how one of these behaves? Add it: https://github.com/Umerrrdo/phonehome/blob/main/CONTRIBUTING.md
+Not in database (1): postgres:16-alpine
+  phonehome does not guess. Know how one of these behaves? Add it: https://github.com/Umerrrdo/phonehome/blob/main/CONTRIBUTING.md
 ```
 
 The exit code is 1 because three services still have telemetry on. With `--fix`, phonehome writes this next to your compose file and leaves the original alone:
@@ -68,14 +72,14 @@ services:
 
 | Command | What it does |
 | --- | --- |
-| `phonehome scan <compose-file> [more-files...]` | Table of services, telemetry default, destinations and fix. |
-| `phonehome scan <compose-file> --fix` | Also writes `compose.phonehome.override.yml` with only the env additions. Never edits your file. |
-| `phonehome blocklist <compose-file>` | Documented telemetry destinations in hosts-file format. |
-| `phonehome blocklist <compose-file> --format pihole` | Plain domain list. `--format adguard` gives `\|\|domain^` rules. |
+| `phonehome scan [compose-file] [more-files...]` | Table of services, telemetry default, destinations and fix. |
+| `phonehome scan [compose-file] --fix` | Also writes `compose.phonehome.override.yml` with only the env additions. Never edits your file. |
+| `phonehome blocklist [compose-file]` | Documented telemetry destinations in hosts-file format. |
+| `phonehome blocklist [compose-file] --format pihole` | Plain domain list. `--format adguard` gives `\|\|domain^` rules. |
 | `phonehome check <image>` | Everything the database knows about one image, with sources. |
 | `phonehome list` | Every app in the database. |
 
-`--json` works on `scan`, `check` and `list`. `--update` downloads the latest database before running the command.
+`--json` works on `scan`, `check` and `list`. `--update` downloads the latest database before running the command. `--debug` adds a stack trace to an error message.
 
 ### Exit codes
 
@@ -100,6 +104,8 @@ docker run --rm --network none -v "$PWD:/work" phonehome scan docker-compose.yml
 
 `--network none` is optional. It is there to show the scan needs no network.
 
+For `--fix` the container has to write into your folder. On Linux add `--user "$(id -u):$(id -g)"` so the override file belongs to you. On Windows use `-v "${PWD}:/work"` in PowerShell.
+
 ## What it detects
 
 - `environment` in list form (`- KEY=value`) and map form (`KEY: value`), including YAML booleans.
@@ -107,13 +113,19 @@ docker run --rm --network none -v "$PWD:/work" phonehome scan docker-compose.yml
 - `${VAR}`, `${VAR:-default}` and `${VAR-default}`, resolved from your shell and the `.env` file next to the compose file.
 - Opt-out flags in `command` and `entrypoint`, for example `--disable-telemetry`.
 - Anchors and merge keys (`<<: *common`).
+- `include:` and `extends:`, including files in other folders.
+- Services behind `profiles:`. Every service is scanned, whichever profile it is in.
 - Image names with or without `docker.io/`, `library/`, a tag or a digest.
 
-An image that is not in the database is listed as "not in database". phonehome never guesses from a similar name.
+An image that is not in the database is listed as "not in database". phonehome never guesses from a similar name. An image on a private registry or mirror, such as `registry.example.com/n8nio/n8n`, is not matched either. phonehome only tells you which entry it looks like, so you can run `phonehome check n8nio/n8n` yourself.
+
+If an image name uses a variable that is not set (`image: ${APP_IMAGE}`), phonehome says so and asks you to set it in your shell or in the `.env` file next to the compose file.
+
+Values are compared exactly. `- N8N_DIAGNOSTICS_ENABLED="false"` in list form passes the quote characters to the app, so phonehome does not count it as off and tells you why.
 
 ## The database
 
-One YAML file per app in [db/apps/](db/apps/), validated against [db/schema.json](db/schema.json). The first release has 22 entries: 20 verified against official docs or project source, 2 marked unverified.
+One YAML file per app in [db/apps/](db/apps/), validated against [db/schema.json](db/schema.json). It has 45 entries: 39 verified against official docs or project source, 6 marked unverified. Apps that send nothing by default are in there too, marked `off`, because "this one is clean" is worth knowing.
 
 The rule for the data: **never invent anything**. Every entry needs a source URL, and every claim must come from official docs or the project's source. A detail that cannot be confirmed is left out and the entry is marked `verified: false`. Wrong privacy advice is worse than none.
 
@@ -152,9 +164,11 @@ It takes about five minutes. Full guide: [CONTRIBUTING.md](CONTRIBUTING.md).
 - **Blocklist formats.** `hosts` (default), `pihole` (plain domains) and `adguard` (`||domain^`). The blocklist includes destinations for every matched app, including ones already opted out.
 - **`check`** always exits 0, also for an image that is not in the database.
 - **Source URL check in CI** fails on 404 and 410, and only warns on timeouts, network errors and other statuses.
-- **Not followed:** Compose `extends` and `include`. A warning is printed for `extends`.
-- **OneCLI is not in the database.** The seed list said `DO_NOT_TRACK=1`, but its [telemetry page](https://onecli.sh/docs/reference/telemetry) says self-hosted OneCLI sends no telemetry, and no official image name could be confirmed.
-- **Novu and Firezone are unverified.** Novu's docs do not state the default. Firezone's docs page could not be opened when the entry was written.
+- **OneCLI is listed as `off`.** The seed list said `DO_NOT_TRACK=1`, but its [telemetry page](https://onecli.sh/docs/reference/telemetry) says self-hosted OneCLI sends no telemetry.
+- **Unverified entries:** Novu, NocoDB and Nextcloud (the docs do not state the default), Firezone (its docs page could not be opened), Gitea and Forgejo (no telemetry setting exists in their config reference, but no official page says outright that they send none).
+- **Sentry is recorded as `unknown`** because its own documentation contradicts itself on the default.
+- **Mirrors and private registries** are never matched, only hinted at.
+- **A file with no services** is a usage error (exit 2), since it is almost always the wrong file.
 
 ## Development
 
@@ -164,6 +178,8 @@ npm test              # builds, then runs the tests
 npm run build:db      # regenerate db/index.json after editing db/apps/
 npm run check:sources # check that every source URL responds (uses the network)
 ```
+
+What was tested, and how, is written up in [TESTING.md](TESTING.md).
 
 ## License
 

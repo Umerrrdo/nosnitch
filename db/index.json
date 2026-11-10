@@ -1004,7 +1004,8 @@
       "slug": "sentry",
       "images": [
         "ghcr.io/getsentry/sentry",
-        "getsentry/sentry"
+        "getsentry/sentry",
+        "sentry-self-hosted-local"
       ],
       "telemetry_default": "unknown",
       "what_is_sent": "The beacon sends an installation ID, the Sentry version, general anonymous statistics on the data pattern and the names and versions of installed Python modules. A contact email only if you opt in to that.",
@@ -1021,11 +1022,12 @@
         }
       ],
       "sources": [
-        "https://develop.sentry.dev/self-hosted/"
+        "https://develop.sentry.dev/self-hosted/",
+        "https://github.com/getsentry/self-hosted/blob/master/docker-compose.yml"
       ],
       "verified_on": "2026-11-11",
       "verified": true,
-      "notes": "The official page contradicts itself on the default. One section says Sentry sends anonymous usage statistics by default, another says the beacon is used if you opt in. The default is recorded as unknown for that reason. The beacon server is run by the Sentry team. The page does not give its hostname."
+      "notes": "The official page contradicts itself on the default. One section says Sentry sends anonymous usage statistics by default, another says the beacon is used if you opt in. The default is recorded as unknown for that reason. The beacon server is run by the Sentry team. The page does not give its hostname. sentry-self-hosted-local is the name the official compose file gives the image it builds locally from the Sentry image."
     },
     {
       "name": "SigNoz",
