@@ -1,0 +1,12 @@
+name: Traefik
+slug: traefik
+images:
+  - traefik
+telemetry_default: "off"
+what_is_sent: Only after you opt in with sendAnonymousUsage. The Traefik version, a hash of the configuration and an anonymized static configuration.
+disable: []
+sources:
+  - https://doc.traefik.io/traefik/contributing/data-collection/
+verified_on: "2026-11-11"
+verified: true
+notes: Anonymous usage data needs an explicit opt-in (global.sendAnonymousUsage). Separately, the version check (global.checkNewVersion) is on by default and sends the running version and the public IP to update.traefik.io. Turn that off in the static configuration if you do not want it.

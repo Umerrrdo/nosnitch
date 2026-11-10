@@ -1,0 +1,12 @@
+name: Nextcloud
+slug: nextcloud
+images:
+  - nextcloud
+telemetry_default: unknown
+what_is_sent: If the usage survey is active, an app list, database type and size, encryption status, share counts, PHP settings, server details and usage statistics.
+disable: []
+sources:
+  - https://github.com/nextcloud/survey_client
+verified_on: "2026-11-11"
+verified: false
+notes: Unverified. Nextcloud's usage survey app sends anonymized data to Nextcloud and can be disabled at any time, but its page does not say whether it is active by default, where the data goes or how to turn it off.

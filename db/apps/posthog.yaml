@@ -1,0 +1,18 @@
+name: PostHog (self-hosted)
+slug: posthog
+images:
+  - posthog/posthog
+telemetry_default: "on"
+what_is_sent: Product usage data, sent to PostHog.
+disable:
+  - type: env
+    name: OPT_OUT_CAPTURE
+    value: "true"
+    note: Set it on the web container and on the workers. The official compose file passes it to both for that reason.
+sources:
+  - https://posthog.com/docs/self-host/configure/environment-variables
+  - https://github.com/PostHog/posthog/blob/master/docker-compose.hobby.yml
+  - https://github.com/PostHog/posthog/blob/master/bin/deploy-hobby
+verified_on: "2026-11-11"
+verified: true
+notes: OPT_OUT_CAPTURE defaults to False. The docs do not name the destination host. The hobby compose file takes its image from REGISTRY_URL, which the deploy script sets to posthog/posthog.

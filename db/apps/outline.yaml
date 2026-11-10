@@ -1,0 +1,16 @@
+name: Outline
+slug: outline
+images:
+  - outlinewiki/outline
+  - docker.getoutline.com/outlinewiki/outline
+telemetry_default: "on"
+what_is_sent: Anonymized statistics, sent to the maintainers as part of the check for updates.
+disable:
+  - type: env
+    name: ENABLE_UPDATES
+    value: "false"
+sources:
+  - https://github.com/outline/outline/blob/main/.env.sample
+verified_on: "2026-11-11"
+verified: true
+notes: The official sample env file ships with ENABLE_UPDATES=true. It does not name the destination host. Error tracking through Sentry is separate and only active if you set SENTRY_DSN.

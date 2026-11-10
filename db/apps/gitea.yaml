@@ -1,0 +1,12 @@
+name: Gitea
+slug: gitea
+images:
+  - gitea/gitea
+  - docker.gitea.com/gitea
+telemetry_default: "off"
+disable: []
+sources:
+  - https://docs.gitea.com/administration/config-cheat-sheet
+verified_on: "2026-11-11"
+verified: false
+notes: Unverified. The configuration reference has no telemetry or usage reporting setting, but no official page states outright that Gitea sends none. What it does document is a version check that is on by default (cron.update_checker ENABLED = true) and fetches https://dl.gitea.com/gitea/version.json.

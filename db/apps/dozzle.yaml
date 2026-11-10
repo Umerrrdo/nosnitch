@@ -1,0 +1,19 @@
+name: Dozzle
+slug: dozzle
+images:
+  - amir20/dozzle
+telemetry_default: "on"
+destinations:
+  - b.dozzle.dev
+what_is_sent: The Dozzle version, deployment mode, enabled auth provider, feature flags, Docker Engine version and counts of hosts, containers and filters, with a random per-install ID. No log contents, container names or IP addresses.
+disable:
+  - type: env
+    name: DOZZLE_NO_ANALYTICS
+    value: "true"
+  - type: flag
+    flag: --no-analytics
+sources:
+  - https://dozzle.dev/guide/analytics
+verified_on: "2026-11-11"
+verified: true
+notes: The docs describe analytics as something you opt out of. They do not use the word "default".

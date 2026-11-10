@@ -1,0 +1,22 @@
+name: GitLab
+slug: gitlab
+images:
+  - gitlab/gitlab-ce
+  - gitlab/gitlab-ee
+telemetry_default: "on"
+destinations:
+  - version.gitlab.com
+what_is_sent: Service Ping collects and sends a weekly payload to GitLab Inc.
+disable:
+  - type: config_file
+    path: /etc/gitlab/gitlab.rb
+    key: gitlab_rails['usage_ping_enabled']
+    value: "false"
+    note: Run gitlab-ctl reconfigure afterwards. This also stops the setting from being changed in the Admin area.
+  - type: manual
+    instructions: Or in the UI go to Admin > Settings > Metrics and profiling > Usage statistics and clear Enable Service Ping. Clear Enable version check there as well to stop the version check.
+sources:
+  - https://docs.gitlab.com/administration/settings/usage_statistics/
+verified_on: "2026-11-11"
+verified: true
+notes: The docs describe usage statistics as opt-out on free GitLab Self-Managed instances. They do not state the default for paid tiers.

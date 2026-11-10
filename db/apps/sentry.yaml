@@ -1,0 +1,19 @@
+name: Sentry (self-hosted)
+slug: sentry
+images:
+  - ghcr.io/getsentry/sentry
+  - getsentry/sentry
+telemetry_default: unknown
+what_is_sent: The beacon sends an installation ID, the Sentry version, general anonymous statistics on the data pattern and the names and versions of installed Python modules. A contact email only if you opt in to that.
+disable:
+  - type: config_file
+    path: sentry/sentry.conf.py
+    key: SENTRY_BEACON
+    value: "False"
+  - type: manual
+    instructions: Self-hosted issue reporting (OS username, IP address, install log, runtime errors and performance data) is a separate choice the installer asks for. Set REPORT_SELF_HOSTED_ISSUES=0 or pass --no-report-self-hosted-issues to install.sh.
+sources:
+  - https://develop.sentry.dev/self-hosted/
+verified_on: "2026-11-11"
+verified: true
+notes: The official page contradicts itself on the default. One section says Sentry sends anonymous usage statistics by default, another says the beacon is used if you opt in. The default is recorded as unknown for that reason. The beacon server is run by the Sentry team. The page does not give its hostname.

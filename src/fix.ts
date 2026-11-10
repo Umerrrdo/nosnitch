@@ -1,5 +1,6 @@
 import { writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { PhonehomeError } from "./errors.js";
 import type { ServiceResult } from "./scanner.js";
 
 export const OVERRIDE_FILE = "compose.phonehome.override.yml";
@@ -35,6 +36,13 @@ export function writeOverride(results: ServiceResult[], composeFile: string): st
   const text = buildOverride(results, composeFile.replace(/^.*[\\/]/, ""));
   if (text === null) return null;
   const target = overridePath(composeFile);
-  writeFileSync(target, text);
+  try {
+    writeFileSync(target, text);
+  } catch (err) {
+    throw new PhonehomeError(
+      `Could not write ${target}: ${(err as Error).message}`,
+      "Check that the folder is writable. In Docker, mount the folder without :ro and, on Linux, add --user $(id -u):$(id -g).",
+    );
+  }
   return target;
 }

@@ -1,0 +1,12 @@
+name: Portainer
+slug: portainer
+images:
+  - portainer/portainer-ce
+  - portainer/portainer-ee
+telemetry_default: "off"
+disable: []
+sources:
+  - https://docs.portainer.io/faqs/getting-started/what-information-does-portainer-collect
+verified_on: "2026-11-11"
+verified: true
+notes: Portainer no longer collects anonymous usage statistics. The Matomo integration was removed in version 2.38.0. Before that, statistics were collected only when users explicitly opted in.

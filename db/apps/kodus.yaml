@@ -1,0 +1,24 @@
+name: Kodus
+slug: kodus
+images:
+  - ghcr.io/kodustech/kodus-ai-api
+  - ghcr.io/kodustech/kodus-ai-worker
+  - ghcr.io/kodustech/kodus-ai-webhook
+telemetry_default: "on"
+destinations:
+  - telemetry.kodus.io
+what_is_sent: One anonymous heartbeat per day with aggregated usage counters and runtime metadata. No code, identities or personal data.
+disable:
+  - type: env
+    name: KODUS_TELEMETRY_DISABLED
+    value: "true"
+    accepted_values:
+      - "1"
+      - yes
+      - on
+sources:
+  - https://docs.kodus.io/how_to_deploy/en/deploy_kodus/telemetry
+  - https://github.com/kodustech/kodus-ai/blob/main/docker-compose.prod.yml
+verified_on: "2026-11-11"
+verified: true
+notes: The docs say each instance sends the heartbeat but not which container does it, so the variable is suggested for every backend container. The official compose file loads them all from the same env file.

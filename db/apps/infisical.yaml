@@ -1,0 +1,14 @@
+name: Infisical
+slug: infisical
+images:
+  - infisical/infisical
+telemetry_default: "on"
+disable:
+  - type: env
+    name: TELEMETRY_ENABLED
+    value: "false"
+sources:
+  - https://infisical.com/docs/self-hosting/configuration/envars
+verified_on: "2026-11-11"
+verified: true
+notes: The docs give the default as true. They do not say what is sent or where.

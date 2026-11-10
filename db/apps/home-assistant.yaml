@@ -1,0 +1,13 @@
+name: Home Assistant
+slug: home-assistant
+images:
+  - ghcr.io/home-assistant/home-assistant
+  - homeassistant/home-assistant
+telemetry_default: "off"
+what_is_sent: Only after you opt in. An installation identifier, the Home Assistant version, installation type and country code, plus optional usage details and counts.
+disable: []
+sources:
+  - https://www.home-assistant.io/integrations/analytics/
+verified_on: "2026-11-11"
+verified: true
+notes: Analytics is opt-in. The docs say nothing is sent unless you explicitly opt in, during onboarding or later under Settings > System > Analytics. The docs do not name the receiving host.

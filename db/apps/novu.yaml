@@ -15,4 +15,4 @@ sources:
   - https://docs.novu.co/community/self-hosting-novu/telemetry
 verified_on: "2026-11-11"
 verified: false
-notes: Unverified. The docs do not state the default, do not name the destination host, and do not say which container reads NOVU_TELEMETRY. The image name was not checked against the official compose file.
+notes: Unverified. The docs do not state the default, do not name the destination host, and do not say which container reads NOVU_TELEMETRY. The official compose file and env example do not set the variable either.

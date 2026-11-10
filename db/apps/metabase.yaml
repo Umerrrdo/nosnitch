@@ -1,0 +1,24 @@
+name: Metabase
+slug: metabase
+images:
+  - metabase/metabase
+  - metabase/metabase-enterprise
+telemetry_default: "on"
+what_is_sent: Anonymous, non-personal usage data such as in-product events, some performance data, the number and types of connected databases and counts of items created.
+disable:
+  - type: env
+    name: MB_ANON_TRACKING_ENABLED
+    value: "false"
+  - type: env
+    name: MB_CHECK_FOR_UPDATES
+    value: "false"
+    optional: true
+    note: Stops the check for new Metabase versions.
+  - type: manual
+    instructions: Or turn off "Anonymous tracking" under Admin > Settings > General.
+sources:
+  - https://www.metabase.com/docs/latest/configuring-metabase/environment-variables
+  - https://www.metabase.com/docs/latest/installation-and-operation/information-collection
+verified_on: "2026-11-11"
+verified: true
+notes: The docs name Snowplow as the collector but give no hostname, so no destination is listed.

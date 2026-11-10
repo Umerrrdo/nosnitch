@@ -1,0 +1,18 @@
+name: Directus
+slug: directus
+images:
+  - directus/directus
+telemetry_default: "on"
+destinations:
+  - telemetry.directus.com
+what_is_sent: Usage data about your environment, used to gauge installation frequency, version fragmentation and user base size.
+still_sent: A one-time project owner registration is sent when an owner is first set. It is controlled separately by PROJECT_OWNER_ENABLED.
+disable:
+  - type: env
+    name: TELEMETRY
+    value: "false"
+sources:
+  - https://directus.com/docs/configuration/general
+verified_on: "2026-11-11"
+verified: true
+notes: The docs add that whether telemetry can be disabled depends on your license.

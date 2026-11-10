@@ -112,6 +112,28 @@
       "notes": "The docs say self-hosted installations periodically send this data and give the variable as the way to stop it. They do not use the word \"default\"."
     },
     {
+      "name": "CockroachDB",
+      "slug": "cockroachdb",
+      "images": [
+        "cockroachdb/cockroach"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Obfuscated usage details, shared periodically by each node and by the DB Console.",
+      "still_sent": "On Enterprise Trial and Enterprise Free licenses the opt-out setting is ignored, so reporting stays on.",
+      "disable": [
+        {
+          "type": "manual",
+          "instructions": "With an Enterprise license only. Set COCKROACH_SKIP_ENABLING_DIAGNOSTIC_REPORTING=true before starting the first node, or run SET CLUSTER SETTING diagnostics.reporting.enabled = false; on a running cluster."
+        }
+      ],
+      "sources": [
+        "https://docs.cockroachlabs.com/docs/stable/diagnostics-reporting"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The environment variable is listed as a manual step because it only works with an Enterprise license, so its presence alone does not prove reporting is off. The docs do not name the destination host."
+    },
+    {
       "name": "Coder",
       "slug": "coder",
       "images": [
@@ -138,6 +160,32 @@
       "notes": "The docs page does not name the destination host."
     },
     {
+      "name": "Directus",
+      "slug": "directus",
+      "images": [
+        "directus/directus"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "telemetry.directus.com"
+      ],
+      "what_is_sent": "Usage data about your environment, used to gauge installation frequency, version fragmentation and user base size.",
+      "still_sent": "A one-time project owner registration is sent when an owner is first set. It is controlled separately by PROJECT_OWNER_ENABLED.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "TELEMETRY",
+          "value": "false"
+        }
+      ],
+      "sources": [
+        "https://directus.com/docs/configuration/general"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs add that whether telemetry can be disabled depends on your license."
+    },
+    {
       "name": "Documenso",
       "slug": "documenso",
       "images": [
@@ -160,6 +208,35 @@
       "notes": "The docs say \"our telemetry servers\" without naming a host, so no destination is listed."
     },
     {
+      "name": "Dozzle",
+      "slug": "dozzle",
+      "images": [
+        "amir20/dozzle"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "b.dozzle.dev"
+      ],
+      "what_is_sent": "The Dozzle version, deployment mode, enabled auth provider, feature flags, Docker Engine version and counts of hosts, containers and filters, with a random per-install ID. No log contents, container names or IP addresses.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "DOZZLE_NO_ANALYTICS",
+          "value": "true"
+        },
+        {
+          "type": "flag",
+          "flag": "--no-analytics"
+        }
+      ],
+      "sources": [
+        "https://dozzle.dev/guide/analytics"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs describe analytics as something you opt out of. They do not use the word \"default\"."
+    },
+    {
       "name": "Firezone",
       "slug": "firezone",
       "images": [
@@ -179,6 +256,70 @@
       "verified_on": "2026-11-11",
       "verified": false,
       "notes": "Unverified. The source page could not be opened when this entry was written, so the default and the variable come from a search engine summary of that page. The image name was not checked either. That summary describes the legacy self-hosted release and says the variable turns off product telemetry. Whether it also covers package and firezone-ctl telemetry is not known."
+    },
+    {
+      "name": "Forgejo",
+      "slug": "forgejo",
+      "images": [
+        "codeberg.org/forgejo/forgejo",
+        "data.forgejo.org/forgejo/forgejo"
+      ],
+      "telemetry_default": "off",
+      "disable": [],
+      "sources": [
+        "https://forgejo.org/docs/latest/admin/config-cheat-sheet/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": false,
+      "notes": "Unverified. The configuration reference has no telemetry or usage reporting setting, but no official page states outright that Forgejo sends none. What it does document is a version check that is on by default (cron.update_checker ENABLED = true) and queries a DNS TXT record on release.forgejo.org. The image names were not checked against an official compose file."
+    },
+    {
+      "name": "Gitea",
+      "slug": "gitea",
+      "images": [
+        "gitea/gitea",
+        "docker.gitea.com/gitea"
+      ],
+      "telemetry_default": "off",
+      "disable": [],
+      "sources": [
+        "https://docs.gitea.com/administration/config-cheat-sheet"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": false,
+      "notes": "Unverified. The configuration reference has no telemetry or usage reporting setting, but no official page states outright that Gitea sends none. What it does document is a version check that is on by default (cron.update_checker ENABLED = true) and fetches https://dl.gitea.com/gitea/version.json."
+    },
+    {
+      "name": "GitLab",
+      "slug": "gitlab",
+      "images": [
+        "gitlab/gitlab-ce",
+        "gitlab/gitlab-ee"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "version.gitlab.com"
+      ],
+      "what_is_sent": "Service Ping collects and sends a weekly payload to GitLab Inc.",
+      "disable": [
+        {
+          "type": "config_file",
+          "path": "/etc/gitlab/gitlab.rb",
+          "key": "gitlab_rails['usage_ping_enabled']",
+          "value": "false",
+          "note": "Run gitlab-ctl reconfigure afterwards. This also stops the setting from being changed in the Admin area."
+        },
+        {
+          "type": "manual",
+          "instructions": "Or in the UI go to Admin > Settings > Metrics and profiling > Usage statistics and clear Enable Service Ping. Clear Enable version check there as well to stop the version check."
+        }
+      ],
+      "sources": [
+        "https://docs.gitlab.com/administration/settings/usage_statistics/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs describe usage statistics as opt-out on free GitLab Self-Managed instances. They do not state the default for paid tiers."
     },
     {
       "name": "Grafana",
@@ -257,6 +398,23 @@
       "notes": "The docs describe telemetry as something you opt out of. They do not use the word \"default\"."
     },
     {
+      "name": "Home Assistant",
+      "slug": "home-assistant",
+      "images": [
+        "ghcr.io/home-assistant/home-assistant",
+        "homeassistant/home-assistant"
+      ],
+      "telemetry_default": "off",
+      "what_is_sent": "Only after you opt in. An installation identifier, the Home Assistant version, installation type and country code, plus optional usage details and counts.",
+      "disable": [],
+      "sources": [
+        "https://www.home-assistant.io/integrations/analytics/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "Analytics is opt-in. The docs say nothing is sent unless you explicitly opt in, during onboarding or later under Settings > System > Analytics. The docs do not name the receiving host."
+    },
+    {
       "name": "Immich machine learning",
       "slug": "immich-machine-learning",
       "images": [
@@ -284,6 +442,76 @@
       "verified_on": "2026-11-11",
       "verified": true,
       "notes": "Caused by onnxruntime turning telemetry on by default in a recent release, so older Immich versions that bundle an older onnxruntime are not affected. phonehome cannot tell the version from a moving tag such as \"release\"."
+    },
+    {
+      "name": "Infisical",
+      "slug": "infisical",
+      "images": [
+        "infisical/infisical"
+      ],
+      "telemetry_default": "on",
+      "disable": [
+        {
+          "type": "env",
+          "name": "TELEMETRY_ENABLED",
+          "value": "false"
+        }
+      ],
+      "sources": [
+        "https://infisical.com/docs/self-hosting/configuration/envars"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs give the default as true. They do not say what is sent or where."
+    },
+    {
+      "name": "Jellyfin",
+      "slug": "jellyfin",
+      "images": [
+        "jellyfin/jellyfin",
+        "ghcr.io/jellyfin/jellyfin"
+      ],
+      "telemetry_default": "off",
+      "disable": [],
+      "sources": [
+        "https://jellyfin.org/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The project states that Jellyfin has no tracking, phone-home, or central servers collecting your data."
+    },
+    {
+      "name": "Kodus",
+      "slug": "kodus",
+      "images": [
+        "ghcr.io/kodustech/kodus-ai-api",
+        "ghcr.io/kodustech/kodus-ai-worker",
+        "ghcr.io/kodustech/kodus-ai-webhook"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "telemetry.kodus.io"
+      ],
+      "what_is_sent": "One anonymous heartbeat per day with aggregated usage counters and runtime metadata. No code, identities or personal data.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "KODUS_TELEMETRY_DISABLED",
+          "value": "true",
+          "accepted_values": [
+            "1",
+            "yes",
+            "on"
+          ]
+        }
+      ],
+      "sources": [
+        "https://docs.kodus.io/how_to_deploy/en/deploy_kodus/telemetry",
+        "https://github.com/kodustech/kodus-ai/blob/main/docker-compose.prod.yml"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs say each instance sends the heartbeat but not which container does it, so the variable is suggested for every backend container. The official compose file loads them all from the same env file."
     },
     {
       "name": "Langfuse",
@@ -341,6 +569,62 @@
       "verified": true
     },
     {
+      "name": "Grafana Loki",
+      "slug": "loki",
+      "images": [
+        "grafana/loki"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "stats.grafana.org"
+      ],
+      "what_is_sent": "Anonymous usage reports.",
+      "disable": [
+        {
+          "type": "flag",
+          "flag": "-reporting.enabled=false"
+        },
+        {
+          "type": "config_file",
+          "path": "the Loki configuration file",
+          "key": "analytics.reporting_enabled",
+          "value": "false"
+        }
+      ],
+      "sources": [
+        "https://grafana.com/docs/loki/latest/configure/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The opt-out is a command-line flag or a config key, not an environment variable, so phonehome detects the flag but cannot write a fix."
+    },
+    {
+      "name": "Mattermost",
+      "slug": "mattermost",
+      "images": [
+        "mattermost/mattermost-team-edition",
+        "mattermost/mattermost-enterprise-edition"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Error and diagnostics reporting sends server errors and panics with no message content. The security update check sends the server version, edition, OS, database type and team and user counts once every 24 hours.",
+      "disable": [
+        {
+          "type": "manual",
+          "instructions": "In the System Console turn off Environment > Logging > Enable Diagnostics and Error Reporting."
+        },
+        {
+          "type": "manual",
+          "instructions": "To stop the security update check as well, turn off Environment > SMTP > Enable Security Alerts. You will then not receive security alerts."
+        }
+      ],
+      "sources": [
+        "https://docs.mattermost.com/administration-guide/manage/telemetry.html"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The telemetry page gives only the System Console paths, so no environment variable is listed and phonehome cannot write a fix. It does not name the destination hosts."
+    },
+    {
       "name": "Meilisearch",
       "slug": "meilisearch",
       "images": [
@@ -365,6 +649,41 @@
       "verified_on": "2026-11-11",
       "verified": true,
       "notes": "The docs name Segment as the collector but give no hostname, so no destination is listed."
+    },
+    {
+      "name": "Metabase",
+      "slug": "metabase",
+      "images": [
+        "metabase/metabase",
+        "metabase/metabase-enterprise"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Anonymous, non-personal usage data such as in-product events, some performance data, the number and types of connected databases and counts of items created.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "MB_ANON_TRACKING_ENABLED",
+          "value": "false"
+        },
+        {
+          "type": "env",
+          "name": "MB_CHECK_FOR_UPDATES",
+          "value": "false",
+          "optional": true,
+          "note": "Stops the check for new Metabase versions."
+        },
+        {
+          "type": "manual",
+          "instructions": "Or turn off \"Anonymous tracking\" under Admin > Settings > General."
+        }
+      ],
+      "sources": [
+        "https://www.metabase.com/docs/latest/configuring-metabase/environment-variables",
+        "https://www.metabase.com/docs/latest/installation-and-operation/information-collection"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs name Snowplow as the collector but give no hostname, so no destination is listed."
     },
     {
       "name": "n8n",
@@ -433,6 +752,44 @@
       "notes": "The docs name a Netdata cloud function and PostHog as the receivers but give no hostnames, so no destination is listed."
     },
     {
+      "name": "Nextcloud",
+      "slug": "nextcloud",
+      "images": [
+        "nextcloud"
+      ],
+      "telemetry_default": "unknown",
+      "what_is_sent": "If the usage survey is active, an app list, database type and size, encryption status, share counts, PHP settings, server details and usage statistics.",
+      "disable": [],
+      "sources": [
+        "https://github.com/nextcloud/survey_client"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": false,
+      "notes": "Unverified. Nextcloud's usage survey app sends anonymized data to Nextcloud and can be disabled at any time, but its page does not say whether it is active by default, where the data goes or how to turn it off."
+    },
+    {
+      "name": "NocoDB",
+      "slug": "nocodb",
+      "images": [
+        "nocodb/nocodb"
+      ],
+      "telemetry_default": "unknown",
+      "what_is_sent": "Anonymous usage data.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "NC_DISABLE_TELE",
+          "value": "true"
+        }
+      ],
+      "sources": [
+        "https://nocodb.com/docs/self-hosting/environment-variables"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": false,
+      "notes": "Unverified. The docs say NC_DISABLE_TELE disables telemetry and ask you to keep telemetry on, which implies it is on by default, but they state neither the default nor the value to set. \"true\" is an assumption."
+    },
+    {
       "name": "Novu",
       "slug": "novu",
       "images": [
@@ -457,7 +814,26 @@
       ],
       "verified_on": "2026-11-11",
       "verified": false,
-      "notes": "Unverified. The docs do not state the default, do not name the destination host, and do not say which container reads NOVU_TELEMETRY. The image name was not checked against the official compose file."
+      "notes": "Unverified. The docs do not state the default, do not name the destination host, and do not say which container reads NOVU_TELEMETRY. The official compose file and env example do not set the variable either."
+    },
+    {
+      "name": "OneCLI",
+      "slug": "onecli",
+      "images": [
+        "ghcr.io/onecli/onecli-api",
+        "ghcr.io/onecli/onecli-web",
+        "ghcr.io/onecli/onecli-gateway",
+        "ghcr.io/onecli/onecli-runner"
+      ],
+      "telemetry_default": "off",
+      "disable": [],
+      "sources": [
+        "https://onecli.sh/docs/reference/telemetry",
+        "https://github.com/onecli/onecli/blob/main/docker/docker-compose.yml"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs say self-hosted OneCLI (Community and Enterprise) sends no telemetry to OneCLI or any third party, and that there is nothing to opt out of. The gateway's analytics only run if both POSTHOG_API_KEY and POSTHOG_HOST are set, and neither has a default."
     },
     {
       "name": "OpenSEO",
@@ -503,6 +879,70 @@
       "verified_on": "2026-11-11",
       "verified": true,
       "notes": "Taken from the project source. The README and Docker self-hosting guide do not mention telemetry."
+    },
+    {
+      "name": "Outline",
+      "slug": "outline",
+      "images": [
+        "outlinewiki/outline",
+        "docker.getoutline.com/outlinewiki/outline"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Anonymized statistics, sent to the maintainers as part of the check for updates.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "ENABLE_UPDATES",
+          "value": "false"
+        }
+      ],
+      "sources": [
+        "https://github.com/outline/outline/blob/main/.env.sample"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The official sample env file ships with ENABLE_UPDATES=true. It does not name the destination host. Error tracking through Sentry is separate and only active if you set SENTRY_DSN."
+    },
+    {
+      "name": "Portainer",
+      "slug": "portainer",
+      "images": [
+        "portainer/portainer-ce",
+        "portainer/portainer-ee"
+      ],
+      "telemetry_default": "off",
+      "disable": [],
+      "sources": [
+        "https://docs.portainer.io/faqs/getting-started/what-information-does-portainer-collect"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "Portainer no longer collects anonymous usage statistics. The Matomo integration was removed in version 2.38.0. Before that, statistics were collected only when users explicitly opted in."
+    },
+    {
+      "name": "PostHog (self-hosted)",
+      "slug": "posthog",
+      "images": [
+        "posthog/posthog"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Product usage data, sent to PostHog.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "OPT_OUT_CAPTURE",
+          "value": "true",
+          "note": "Set it on the web container and on the workers. The official compose file passes it to both for that reason."
+        }
+      ],
+      "sources": [
+        "https://posthog.com/docs/self-host/configure/environment-variables",
+        "https://github.com/PostHog/posthog/blob/master/docker-compose.hobby.yml",
+        "https://github.com/PostHog/posthog/blob/master/bin/deploy-hobby"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "OPT_OUT_CAPTURE defaults to False. The docs do not name the destination host. The hobby compose file takes its image from REGISTRY_URL, which the deploy script sets to posthog/posthog."
     },
     {
       "name": "PowerSync Service",
@@ -560,6 +1000,34 @@
       "notes": "The docs page does not name the destination host."
     },
     {
+      "name": "Sentry (self-hosted)",
+      "slug": "sentry",
+      "images": [
+        "ghcr.io/getsentry/sentry",
+        "getsentry/sentry"
+      ],
+      "telemetry_default": "unknown",
+      "what_is_sent": "The beacon sends an installation ID, the Sentry version, general anonymous statistics on the data pattern and the names and versions of installed Python modules. A contact email only if you opt in to that.",
+      "disable": [
+        {
+          "type": "config_file",
+          "path": "sentry/sentry.conf.py",
+          "key": "SENTRY_BEACON",
+          "value": "False"
+        },
+        {
+          "type": "manual",
+          "instructions": "Self-hosted issue reporting (OS username, IP address, install log, runtime errors and performance data) is a separate choice the installer asks for. Set REPORT_SELF_HOSTED_ISSUES=0 or pass --no-report-self-hosted-issues to install.sh."
+        }
+      ],
+      "sources": [
+        "https://develop.sentry.dev/self-hosted/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The official page contradicts itself on the default. One section says Sentry sends anonymous usage statistics by default, another says the beacon is used if you opt in. The default is recorded as unknown for that reason. The beacon server is run by the Sentry team. The page does not give its hostname."
+    },
+    {
       "name": "SigNoz",
       "slug": "signoz",
       "images": [
@@ -586,6 +1054,29 @@
       "notes": "The opt-out depends on the version, so phonehome does not write a fix for it. The docs do not name the destination host."
     },
     {
+      "name": "Supabase (self-hosted)",
+      "slug": "supabase",
+      "images": [
+        "supabase/studio",
+        "supabase/gotrue",
+        "supabase/realtime",
+        "supabase/storage-api",
+        "supabase/postgres-meta",
+        "supabase/edge-runtime",
+        "supabase/postgres",
+        "supabase/supavisor"
+      ],
+      "telemetry_default": "off",
+      "disable": [],
+      "sources": [
+        "https://supabase.com/docs/guides/self-hosting",
+        "https://github.com/supabase/supabase/blob/master/docker/docker-compose.yml"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs say self-hosted Supabase does not phone home or collect any telemetry. The Supabase CLI is a separate tool and does collect usage telemetry, with its own opt-out."
+    },
+    {
       "name": "TimescaleDB",
       "slug": "timescaledb",
       "images": [
@@ -608,6 +1099,52 @@
       "verified_on": "2026-11-11",
       "verified": true,
       "notes": "The default telemetry level is \"basic\". The opt-out is a PostgreSQL setting, so phonehome cannot write a fix for it. The docs page does not name the destination host."
+    },
+    {
+      "name": "Traefik",
+      "slug": "traefik",
+      "images": [
+        "traefik"
+      ],
+      "telemetry_default": "off",
+      "what_is_sent": "Only after you opt in with sendAnonymousUsage. The Traefik version, a hash of the configuration and an anonymized static configuration.",
+      "disable": [],
+      "sources": [
+        "https://doc.traefik.io/traefik/contributing/data-collection/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "Anonymous usage data needs an explicit opt-in (global.sendAnonymousUsage). Separately, the version check (global.checkNewVersion) is on by default and sends the running version and the public IP to update.traefik.io. Turn that off in the static configuration if you do not want it."
+    },
+    {
+      "name": "Umami",
+      "slug": "umami",
+      "images": [
+        "ghcr.io/umami-software/umami"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Completely anonymous telemetry data, according to the docs. They give no further detail.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "DISABLE_TELEMETRY",
+          "value": "1"
+        },
+        {
+          "type": "env",
+          "name": "DISABLE_UPDATES",
+          "value": "1",
+          "optional": true,
+          "note": "Stops the check for new Umami versions."
+        }
+      ],
+      "sources": [
+        "https://docs.umami.is/docs/environment-variables",
+        "https://github.com/umami-software/umami/blob/master/docker-compose.yml"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs describe telemetry as something you can choose to disable. They do not use the word \"default\" or name the destination host."
     },
     {
       "name": "Weaviate",

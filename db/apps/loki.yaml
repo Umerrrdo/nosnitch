@@ -1,0 +1,20 @@
+name: Grafana Loki
+slug: loki
+images:
+  - grafana/loki
+telemetry_default: "on"
+destinations:
+  - stats.grafana.org
+what_is_sent: Anonymous usage reports.
+disable:
+  - type: flag
+    flag: -reporting.enabled=false
+  - type: config_file
+    path: the Loki configuration file
+    key: analytics.reporting_enabled
+    value: "false"
+sources:
+  - https://grafana.com/docs/loki/latest/configure/
+verified_on: "2026-11-11"
+verified: true
+notes: The opt-out is a command-line flag or a config key, not an environment variable, so phonehome detects the flag but cannot write a fix.

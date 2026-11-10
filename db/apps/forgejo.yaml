@@ -1,0 +1,12 @@
+name: Forgejo
+slug: forgejo
+images:
+  - codeberg.org/forgejo/forgejo
+  - data.forgejo.org/forgejo/forgejo
+telemetry_default: "off"
+disable: []
+sources:
+  - https://forgejo.org/docs/latest/admin/config-cheat-sheet/
+verified_on: "2026-11-11"
+verified: false
+notes: Unverified. The configuration reference has no telemetry or usage reporting setting, but no official page states outright that Forgejo sends none. What it does document is a version check that is on by default (cron.update_checker ENABLED = true) and queries a DNS TXT record on release.forgejo.org. The image names were not checked against an official compose file.

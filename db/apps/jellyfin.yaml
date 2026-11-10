@@ -1,0 +1,12 @@
+name: Jellyfin
+slug: jellyfin
+images:
+  - jellyfin/jellyfin
+  - ghcr.io/jellyfin/jellyfin
+telemetry_default: "off"
+disable: []
+sources:
+  - https://jellyfin.org/
+verified_on: "2026-11-11"
+verified: true
+notes: The project states that Jellyfin has no tracking, phone-home, or central servers collecting your data.

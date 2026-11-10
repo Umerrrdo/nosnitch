@@ -1,0 +1,21 @@
+name: Umami
+slug: umami
+images:
+  - ghcr.io/umami-software/umami
+telemetry_default: "on"
+what_is_sent: Completely anonymous telemetry data, according to the docs. They give no further detail.
+disable:
+  - type: env
+    name: DISABLE_TELEMETRY
+    value: "1"
+  - type: env
+    name: DISABLE_UPDATES
+    value: "1"
+    optional: true
+    note: Stops the check for new Umami versions.
+sources:
+  - https://docs.umami.is/docs/environment-variables
+  - https://github.com/umami-software/umami/blob/master/docker-compose.yml
+verified_on: "2026-11-11"
+verified: true
+notes: The docs describe telemetry as something you can choose to disable. They do not use the word "default" or name the destination host.

@@ -1,0 +1,17 @@
+name: Mattermost
+slug: mattermost
+images:
+  - mattermost/mattermost-team-edition
+  - mattermost/mattermost-enterprise-edition
+telemetry_default: "on"
+what_is_sent: Error and diagnostics reporting sends server errors and panics with no message content. The security update check sends the server version, edition, OS, database type and team and user counts once every 24 hours.
+disable:
+  - type: manual
+    instructions: In the System Console turn off Environment > Logging > Enable Diagnostics and Error Reporting.
+  - type: manual
+    instructions: To stop the security update check as well, turn off Environment > SMTP > Enable Security Alerts. You will then not receive security alerts.
+sources:
+  - https://docs.mattermost.com/administration-guide/manage/telemetry.html
+verified_on: "2026-11-11"
+verified: true
+notes: The telemetry page gives only the System Console paths, so no environment variable is listed and phonehome cannot write a fix. It does not name the destination hosts.

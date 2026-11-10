@@ -1,0 +1,15 @@
+name: NocoDB
+slug: nocodb
+images:
+  - nocodb/nocodb
+telemetry_default: unknown
+what_is_sent: Anonymous usage data.
+disable:
+  - type: env
+    name: NC_DISABLE_TELE
+    value: "true"
+sources:
+  - https://nocodb.com/docs/self-hosting/environment-variables
+verified_on: "2026-11-11"
+verified: false
+notes: Unverified. The docs say NC_DISABLE_TELE disables telemetry and ask you to keep telemetry on, which implies it is on by default, but they state neither the default nor the value to set. "true" is an assumption.

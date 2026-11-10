@@ -1,0 +1,19 @@
+name: Supabase (self-hosted)
+slug: supabase
+images:
+  - supabase/studio
+  - supabase/gotrue
+  - supabase/realtime
+  - supabase/storage-api
+  - supabase/postgres-meta
+  - supabase/edge-runtime
+  - supabase/postgres
+  - supabase/supavisor
+telemetry_default: "off"
+disable: []
+sources:
+  - https://supabase.com/docs/guides/self-hosting
+  - https://github.com/supabase/supabase/blob/master/docker/docker-compose.yml
+verified_on: "2026-11-11"
+verified: true
+notes: The docs say self-hosted Supabase does not phone home or collect any telemetry. The Supabase CLI is a separate tool and does collect usage telemetry, with its own opt-out.

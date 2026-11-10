@@ -1,0 +1,15 @@
+name: OneCLI
+slug: onecli
+images:
+  - ghcr.io/onecli/onecli-api
+  - ghcr.io/onecli/onecli-web
+  - ghcr.io/onecli/onecli-gateway
+  - ghcr.io/onecli/onecli-runner
+telemetry_default: "off"
+disable: []
+sources:
+  - https://onecli.sh/docs/reference/telemetry
+  - https://github.com/onecli/onecli/blob/main/docker/docker-compose.yml
+verified_on: "2026-11-11"
+verified: true
+notes: The docs say self-hosted OneCLI (Community and Enterprise) sends no telemetry to OneCLI or any third party, and that there is nothing to opt out of. The gateway's analytics only run if both POSTHOG_API_KEY and POSTHOG_HOST are set, and neither has a default.

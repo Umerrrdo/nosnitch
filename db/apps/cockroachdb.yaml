@@ -1,0 +1,15 @@
+name: CockroachDB
+slug: cockroachdb
+images:
+  - cockroachdb/cockroach
+telemetry_default: "on"
+what_is_sent: Obfuscated usage details, shared periodically by each node and by the DB Console.
+still_sent: On Enterprise Trial and Enterprise Free licenses the opt-out setting is ignored, so reporting stays on.
+disable:
+  - type: manual
+    instructions: With an Enterprise license only. Set COCKROACH_SKIP_ENABLING_DIAGNOSTIC_REPORTING=true before starting the first node, or run SET CLUSTER SETTING diagnostics.reporting.enabled = false; on a running cluster.
+sources:
+  - https://docs.cockroachlabs.com/docs/stable/diagnostics-reporting
+verified_on: "2026-11-11"
+verified: true
+notes: The environment variable is listed as a manual step because it only works with an Enterprise license, so its presence alone does not prove reporting is off. The docs do not name the destination host.
