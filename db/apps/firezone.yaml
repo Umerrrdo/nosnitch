@@ -11,4 +11,4 @@ sources:
   - https://docs.firezone.dev/reference/telemetry
 verified_on: "2026-11-11"
 verified: false
-notes: Unverified. The source page could not be opened when this entry was written, so the default and the variable come from a search engine summary of that page. The image name was not checked either.
+notes: Unverified. The source page could not be opened when this entry was written, so the default and the variable come from a search engine summary of that page. The image name was not checked either. That summary describes the legacy self-hosted release and says the variable turns off product telemetry. Whether it also covers package and firezone-ctl telemetry is not known.

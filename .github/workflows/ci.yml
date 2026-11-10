@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Weekly, so a source page that disappears is noticed.
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - name: Validate db/apps/*.yaml against db/schema.json
+        run: npm run validate:db
+      - run: npm test
+
+  sources:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Check that every source URL responds
+        run: npm run check:sources
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t phonehome .
+      - name: Scan the example file inside the image
+        run: |
+          set +e
+          docker run --rm --network none -v "$PWD/test/fixtures:/work:ro" phonehome scan example-compose.yml
+          test $? -eq 1
