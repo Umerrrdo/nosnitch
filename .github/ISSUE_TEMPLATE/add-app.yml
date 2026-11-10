@@ -1,0 +1,58 @@
+name: Add or correct an app
+description: Tell us how an app handles telemetry so it can go in the database.
+title: "Add app: "
+labels: ["database"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping. One rule: nothing invented. Every claim needs a link to the project's official docs or source code.
+        If you can open a pull request instead, see [CONTRIBUTING.md](https://github.com/Umerrrdo/nosnitch/blob/main/CONTRIBUTING.md). It takes about five minutes.
+  - type: input
+    id: name
+    attributes:
+      label: App name
+      placeholder: Example App
+    validations:
+      required: true
+  - type: textarea
+    id: images
+    attributes:
+      label: Image names
+      description: One per line, without a tag. Copy them from the project's official compose file or docs if you can.
+      placeholder: |
+        exampleorg/example-app
+        ghcr.io/exampleorg/example-app
+    validations:
+      required: true
+  - type: dropdown
+    id: telemetry_default
+    attributes:
+      label: Telemetry default
+      description: What happens on a fresh install with nothing changed.
+      options:
+        - "on"
+        - "off"
+        - partial (some of it is on)
+        - unknown (not documented)
+    validations:
+      required: true
+  - type: textarea
+    id: disable
+    attributes:
+      label: How to disable it
+      description: The environment variable and value, command-line flag, config file key or UI setting. Leave empty if telemetry is off by default or there is no opt-out.
+      placeholder: Set EXAMPLE_TELEMETRY_DISABLED=true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Source URL
+      description: Official docs or source code that back up the answers above. One per line. Blog posts, forum answers and AI summaries do not count.
+      placeholder: https://docs.example.com/self-hosting/telemetry
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Anything else
+      description: "Optional, and only if the source says so: what is sent, which hosts it goes to, the version where the default changed, what is still sent after opting out."
