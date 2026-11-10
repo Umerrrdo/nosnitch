@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { loadCompose } from "./compose.js";
 import { loadDatabase } from "./db.js";
+import { writeOverride } from "./fix.js";
 import { renderCheck, renderList, renderScan } from "./render.js";
 import { checkImage, exitCodeFor, scanServices } from "./scanner.js";
 
@@ -12,6 +13,7 @@ const HELP = `phonehome: which apps in your Docker Compose file send telemetry b
 
 Usage:
   phonehome scan <compose-file> [more-files...]   table of services, defaults, destinations and fixes
+  phonehome scan <compose-file> --fix             write compose.phonehome.override.yml (your file is never edited)
   phonehome check <image>                         look up one image
   phonehome list                                  list every app in the database
 
@@ -46,6 +48,7 @@ async function main(argv: string[]): Promise<number> {
     allowPositionals: true,
     options: {
       json: { type: "boolean", default: false },
+      fix: { type: "boolean", default: false },
       update: { type: "boolean", default: false },
       help: { type: "boolean", short: "h", default: false },
       version: { type: "boolean", short: "v", default: false },
@@ -77,10 +80,18 @@ async function main(argv: string[]): Promise<number> {
       const project = loadCompose(files);
       const results = scanServices(project.services, db.apps);
       const exitCode = exitCodeFor(results);
+      const written = values.fix ? writeOverride(results, files[0] as string) : null;
       if (values.json) {
-        console.log(JSON.stringify({ files, database: { source, apps: db.apps.length }, services: results, warnings: project.warnings, exit_code: exitCode }, null, 2));
+        const report = { files, database: { source, apps: db.apps.length }, services: results, warnings: project.warnings, override_file: written, exit_code: exitCode };
+        console.log(JSON.stringify(report, null, 2));
       } else {
         console.log(renderScan(results, project.warnings));
+        if (written) {
+          console.log(`\nWrote ${written}`);
+          console.log(`Apply it: docker compose -f ${files[0]} -f ${written} up -d`);
+        } else if (values.fix) {
+          console.log("\nNothing to write: no environment fixes are needed.");
+        }
       }
       return exitCode;
     }
