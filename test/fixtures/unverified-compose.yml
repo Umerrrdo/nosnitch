@@ -1,0 +1,6 @@
+# Only an unverified entry and an undocumented default: reported, but exit 0.
+services:
+  firezone:
+    image: firezone/firezone:0.7
+  novu-api:
+    image: ghcr.io/novuhq/novu/api:latest

@@ -1,0 +1,17 @@
+# Everything known is opted out: scan must exit 0.
+services:
+  n8n:
+    image: n8nio/n8n@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    environment:
+      N8N_DIAGNOSTICS_ENABLED: "false"
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    command: ["./qdrant", "--disable-telemetry"]
+  netdata:
+    image: netdata/netdata:stable
+    environment:
+      - DO_NOT_TRACK=1
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:v3.3.6
+  redis:
+    image: redis:7

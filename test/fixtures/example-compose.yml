@@ -1,0 +1,48 @@
+# A realistic self-hosted stack used by the tests and the README.
+services:
+  # Telemetry on, nothing set: should be flagged.
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:1.70.2
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=n8n.example.com
+      - GENERIC_TIMEZONE=Europe/Berlin
+
+  # Already disabled, map form with a YAML boolean.
+  grafana:
+    image: grafana/grafana:11.3.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_ANALYTICS_REPORTING_ENABLED: false
+
+  # Already disabled, list form.
+  meilisearch:
+    image: getmeili/meilisearch:v1.11
+    environment:
+      - MEILI_ENV=production
+      - MEILI_NO_ANALYTICS=true
+
+  # Already disabled through an env_file.
+  langfuse-web:
+    image: docker.io/langfuse/langfuse:3
+    env_file:
+      - ./langfuse.env
+
+  # Telemetry on with a documented destination.
+  hasura:
+    image: hasura/graphql-engine:v2.44.0
+    environment:
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+
+  # Version before the upstream fix.
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:v3.3.5
+
+  # Not in the database: must be reported as such, never guessed.
+  postgres:
+    image: postgres:16-alpine
+
+  # No image at all.
+  internal-api:
+    build: ./api
