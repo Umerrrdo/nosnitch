@@ -1,0 +1,19 @@
+name: Hasura GraphQL Engine
+slug: hasura
+images:
+  - hasura/graphql-engine
+telemetry_default: "on"
+destinations:
+  - telemetry.hasura.io
+what_is_sent: Anonymous, aggregate usage statistics from the server, Console and CLI, such as object counts and error events.
+disable:
+  - type: env
+    name: HASURA_GRAPHQL_ENABLE_TELEMETRY
+    value: "false"
+  - type: flag
+    flag: --enable-telemetry=false
+sources:
+  - https://hasura.io/docs/2.0/policies/telemetry/
+verified_on: "2026-11-11"
+verified: true
+notes: The docs describe telemetry as something you opt out of. They do not use the word "default".

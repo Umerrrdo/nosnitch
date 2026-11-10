@@ -1,0 +1,19 @@
+name: Langfuse
+slug: langfuse
+images:
+  - langfuse/langfuse
+  - langfuse/langfuse-worker
+telemetry_default: "on"
+destinations:
+  - eu.posthog.com
+what_is_sent: High-level aggregated usage metrics such as version, project and trace totals. No raw traces, prompts or email addresses.
+still_sent: Enterprise self-hosted telemetry is used for license compliance and cannot be disabled.
+disable:
+  - type: env
+    name: TELEMETRY_ENABLED
+    value: "false"
+    note: Set it on every Langfuse application container.
+sources:
+  - https://langfuse.com/self-hosting/security/telemetry
+verified_on: "2026-11-11"
+verified: true

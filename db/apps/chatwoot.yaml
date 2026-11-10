@@ -1,0 +1,18 @@
+name: Chatwoot
+slug: chatwoot
+images:
+  - chatwoot/chatwoot
+telemetry_default: "on"
+destinations:
+  - hub.chatwoot.com
+  - hub.2.chatwoot.com
+what_is_sent: Anonymised metadata such as aggregate record counts, inbox and conversation type distributions and enabled integrations, sent periodically.
+disable:
+  - type: env
+    name: DISABLE_TELEMETRY
+    value: "true"
+sources:
+  - https://developers.chatwoot.com/self-hosted/telemetry
+verified_on: "2026-11-11"
+verified: true
+notes: The docs say self-hosted installations periodically send this data and give the variable as the way to stop it. They do not use the word "default".

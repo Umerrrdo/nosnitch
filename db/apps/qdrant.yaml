@@ -1,0 +1,21 @@
+name: Qdrant
+slug: qdrant
+images:
+  - qdrant/qdrant
+telemetry_default: "on"
+what_is_sent: Anonymized system information, performance timings and counters, and critical error reports such as backtraces.
+disable:
+  - type: env
+    name: QDRANT__TELEMETRY_DISABLED
+    value: "true"
+  - type: flag
+    flag: --disable-telemetry
+  - type: config_file
+    path: config/config.yaml
+    key: telemetry_disabled
+    value: "true"
+sources:
+  - https://qdrant.tech/documentation/ops-configuration/usage-statistics/
+verified_on: "2026-11-11"
+verified: true
+notes: The docs page does not name the destination host.

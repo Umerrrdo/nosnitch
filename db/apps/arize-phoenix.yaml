@@ -1,0 +1,18 @@
+name: Arize Phoenix
+slug: arize-phoenix
+images:
+  - arizephoenix/phoenix
+telemetry_default: "on"
+what_is_sent: Basic web analytics about interactions with the Phoenix web interface. No trace or evaluation data.
+disable:
+  - type: env
+    name: PHOENIX_TELEMETRY_ENABLED
+    value: "false"
+    alternatives:
+      - name: PHOENIX_ALLOW_EXTERNAL_RESOURCES
+        value: "false"
+sources:
+  - https://arize.com/docs/phoenix/self-hosting/security/privacy
+verified_on: "2026-11-11"
+verified: true
+notes: PHOENIX_ALLOW_EXTERNAL_RESOURCES=false is meant for air-gapped installs and also blocks other external resources. The docs page does not name the destination host.

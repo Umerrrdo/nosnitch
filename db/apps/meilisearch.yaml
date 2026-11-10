@@ -1,0 +1,17 @@
+name: Meilisearch
+slug: meilisearch
+images:
+  - getmeili/meilisearch
+telemetry_default: "on"
+what_is_sent: Anonymized system, performance and usage metrics, sent in batches through Segment.
+disable:
+  - type: env
+    name: MEILI_NO_ANALYTICS
+    value: "true"
+  - type: flag
+    flag: --no-analytics
+sources:
+  - https://www.meilisearch.com/docs/learn/resources/telemetry
+verified_on: "2026-11-11"
+verified: true
+notes: The docs name Segment as the collector but give no hostname, so no destination is listed.

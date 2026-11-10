@@ -1,0 +1,17 @@
+name: TimescaleDB
+slug: timescaledb
+images:
+  - timescale/timescaledb
+  - timescale/timescaledb-ha
+telemetry_default: "on"
+what_is_sent: An anonymous JSON usage report with the instance's versions, operating system, database feature counts and job statistics.
+disable:
+  - type: config_file
+    path: postgresql.conf
+    key: timescaledb.telemetry_level
+    value: "off"
+sources:
+  - https://www.tigerdata.com/docs/self-hosted/latest/configuration/telemetry
+verified_on: "2026-11-11"
+verified: true
+notes: The default telemetry level is "basic". The opt-out is a PostgreSQL setting, so phonehome cannot write a fix for it. The docs page does not name the destination host.

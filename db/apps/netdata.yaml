@@ -1,0 +1,18 @@
+name: Netdata
+slug: netdata
+images:
+  - netdata/netdata
+telemetry_default: "on"
+what_is_sent: Anonymous system, configuration and alert/chart count data on agent start, stop and fatal errors, plus product usage events from the dashboard.
+disable:
+  - type: env
+    name: DISABLE_TELEMETRY
+    value: "1"
+    alternatives:
+      - name: DO_NOT_TRACK
+        value: "1"
+sources:
+  - https://learn.netdata.cloud/docs/netdata-agent/configuration/anonymous-telemetry-events
+verified_on: "2026-11-11"
+verified: true
+notes: The docs name a Netdata cloud function and PostHog as the receivers but give no hostnames, so no destination is listed.

@@ -1,0 +1,15 @@
+name: Documenso
+slug: documenso
+images:
+  - documenso/documenso
+telemetry_default: "on"
+what_is_sent: App version, an installation ID and a node ID, sent on server startup and with a periodic heartbeat.
+disable:
+  - type: env
+    name: DOCUMENSO_DISABLE_TELEMETRY
+    value: "true"
+sources:
+  - https://docs.documenso.com/docs/self-hosting/configuration/telemetry
+verified_on: "2026-11-11"
+verified: true
+notes: The docs say "our telemetry servers" without naming a host, so no destination is listed.

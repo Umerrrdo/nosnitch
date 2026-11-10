@@ -1,0 +1,17 @@
+name: Coder
+slug: coder
+images:
+  - ghcr.io/coder/coder
+telemetry_default: "on"
+what_is_sent: Usage and deployment metadata such as feature and template details, plus the administrator's email. No secrets or end-user identities.
+disable:
+  - type: env
+    name: CODER_TELEMETRY_ENABLE
+    value: "false"
+  - type: flag
+    flag: --telemetry=false
+sources:
+  - https://coder.com/docs/admin/setup/telemetry
+verified_on: "2026-11-11"
+verified: true
+notes: The docs page does not name the destination host.

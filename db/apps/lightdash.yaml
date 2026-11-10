@@ -1,0 +1,17 @@
+name: Lightdash
+slug: lightdash
+images:
+  - lightdash/lightdash
+telemetry_default: "on"
+destinations:
+  - analytics.lightdash.com
+what_is_sent: Usage events tied to organization, project, user and content UUIDs, plus some resource titles, descriptions and short error messages. No SQL, query results or credentials.
+disable:
+  - type: env
+    name: RUDDERSTACK_ANALYTICS_DISABLED
+    value: "true"
+    note: Set it on every container that runs Lightdash code (backend, scheduler, workers).
+sources:
+  - https://docs.lightdash.com/self-host/data-flows-and-telemetry
+verified_on: "2026-11-11"
+verified: true

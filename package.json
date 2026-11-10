@@ -1,0 +1,49 @@
+{
+  "name": "phonehome",
+  "version": "0.1.0",
+  "description": "Find out which apps in your Docker Compose file send telemetry by default, where it goes, and how to turn it off.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "phonehome": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "db/index.json",
+    "db/schema.json",
+    "README.md",
+    "CONTRIBUTING.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:db": "node scripts/build-db.mjs",
+    "validate:db": "node scripts/build-db.mjs --check",
+    "check:sources": "node scripts/check-sources.mjs",
+    "test": "npm run build && node --test",
+    "prepublishOnly": "npm run build:db && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Umerrrdo/phonehome.git"
+  },
+  "keywords": [
+    "telemetry",
+    "privacy",
+    "docker",
+    "docker-compose",
+    "self-hosted",
+    "blocklist"
+  ],
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "yaml": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "typescript": "^5.6.0"
+  }
+}

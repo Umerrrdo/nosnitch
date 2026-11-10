@@ -1,0 +1,20 @@
+name: Activepieces
+slug: activepieces
+images:
+  - activepieces/activepieces
+  - ghcr.io/activepieces/activepieces
+telemetry_default: "on"
+what_is_sent: A daily snapshot of the deployment shape such as replica counts, resource sizes, versions and settings. Product analytics adds tracked events and in-app page view counts.
+disable:
+  - type: manual
+    instructions: Turn off the deployment snapshot in the UI under Platform Admin > Account > Configurations. It does not read AP_TELEMETRY_ENABLED.
+  - type: env
+    name: AP_TELEMETRY_ENABLED
+    value: "false"
+    optional: true
+    note: Only seeds the product analytics setting the first time it is read. After that the UI toggle controls it.
+sources:
+  - https://www.activepieces.com/docs/install/configuration/telemetry
+verified_on: "2026-11-11"
+verified: true
+notes: The deployment snapshot is documented as on by default. The docs do not state the default for product analytics or name the destination host.

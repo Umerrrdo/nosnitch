@@ -1,0 +1,16 @@
+name: PowerSync Service
+slug: powersync
+images:
+  - journeyapps/powersync-service
+telemetry_default: "on"
+what_is_sent: Usage counters and gauges such as bytes synced and replication lag, collected every few minutes and tied to a random instance UUID.
+disable:
+  - type: config_file
+    path: service.yaml
+    key: telemetry.disable_telemetry_sharing
+    value: "true"
+sources:
+  - https://docs.powersync.com/maintenance-ops/self-hosting/telemetry
+verified_on: "2026-11-11"
+verified: true
+notes: The docs say the metrics go to PowerSync without naming a host. The opt-out is a config key, so phonehome cannot write a fix for it.

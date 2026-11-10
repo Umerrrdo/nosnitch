@@ -1,0 +1,27 @@
+name: n8n
+slug: n8n
+images:
+  - n8nio/n8n
+  - docker.n8n.io/n8nio/n8n
+telemetry_default: "on"
+what_is_sent: Anonymous usage telemetry, sent mostly at event time, plus execution counts and an instance pulse every 6 hours.
+disable:
+  - type: env
+    name: N8N_DIAGNOSTICS_ENABLED
+    value: "false"
+  - type: env
+    name: N8N_VERSION_NOTIFICATIONS_ENABLED
+    value: "false"
+    optional: true
+    note: Stops the version update check.
+  - type: env
+    name: N8N_TEMPLATES_ENABLED
+    value: "false"
+    optional: true
+    note: Stops workflow template fetching. Templates stop working in the UI.
+sources:
+  - https://docs.n8n.io/hosting/securing/telemetry-opt-out
+  - https://docs.n8n.io/hosting/configuration/configuration-examples/isolation/
+verified_on: "2026-11-11"
+verified: true
+notes: The docs do not name the destination hosts, so none are listed.

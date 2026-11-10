@@ -1,0 +1,18 @@
+name: Novu
+slug: novu
+images:
+  - ghcr.io/novuhq/novu/api
+telemetry_default: unknown
+what_is_sent: Usage statistics such as event, integration, organization, subscriber, topic, user and workflow counts.
+still_sent: An hourly keep-alive ping (hostname, instance ID, IP address, platform, release, memory figures) is sent whether telemetry is on or off.
+disable:
+  - type: env
+    name: NOVU_TELEMETRY
+    value: "false"
+  - type: manual
+    instructions: Telemetry can also be turned off in the Admin Settings.
+sources:
+  - https://docs.novu.co/community/self-hosting-novu/telemetry
+verified_on: "2026-11-11"
+verified: false
+notes: Unverified. The docs do not state the default, do not name the destination host, and do not say which container reads NOVU_TELEMETRY. The image name was not checked against the official compose file.

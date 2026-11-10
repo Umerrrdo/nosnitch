@@ -1,0 +1,17 @@
+name: SigNoz
+slug: signoz
+images:
+  - signoz/signoz
+  - signoz/query-service
+telemetry_default: "on"
+what_is_sent: Deployment platform, OS, build version and variant, counts of dashboards, alerts and users, and ingested data volume. User emails too unless identity collection is turned off.
+disable:
+  - type: manual
+    instructions: "v0.88.0 and later: set statsreporter.enabled to false in the SigNoz configuration. To keep reporting but drop emails, set statsreporter.collect.identities to false."
+  - type: manual
+    instructions: "Before v0.88.0: set TELEMETRY_ENABLED=false in the query-service environment and restart query-service."
+sources:
+  - https://signoz.io/docs/telemetry/
+verified_on: "2026-11-11"
+verified: true
+notes: The opt-out depends on the version, so phonehome does not write a fix for it. The docs do not name the destination host.

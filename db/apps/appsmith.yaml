@@ -1,0 +1,19 @@
+name: Appsmith
+slug: appsmith
+images:
+  - appsmith/appsmith-ce
+  - appsmith/appsmith-ee
+telemetry_default: "on"
+destinations:
+  - api.mixpanel.com
+what_is_sent: Anonymous navigation, click and successful backend-call events.
+still_sent: Keep-alive and server-setup pings are sent whether telemetry is on or off.
+disable:
+  - type: env
+    name: APPSMITH_DISABLE_TELEMETRY
+    value: "true"
+sources:
+  - https://docs.appsmith.com/product/telemetry
+verified_on: "2026-11-11"
+verified: true
+notes: api.mixpanel.com is the endpoint shown in the sample payloads in the docs. It is shared with other products that use Mixpanel.

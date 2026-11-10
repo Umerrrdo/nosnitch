@@ -1,0 +1,33 @@
+name: Grafana
+slug: grafana
+images:
+  - grafana/grafana
+  - grafana/grafana-oss
+  - grafana/grafana-enterprise
+telemetry_default: "on"
+destinations:
+  - stats.grafana.org
+what_is_sent: Anonymous usage statistics.
+disable:
+  - type: env
+    name: GF_ANALYTICS_REPORTING_ENABLED
+    value: "false"
+  - type: env
+    name: GF_ANALYTICS_CHECK_FOR_UPDATES
+    value: "false"
+    optional: true
+    note: Stops the check for new Grafana versions.
+  - type: env
+    name: GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES
+    value: "false"
+    optional: true
+    note: Stops the check for new plugin versions.
+  - type: config_file
+    path: grafana.ini
+    key: analytics.reporting_enabled
+    value: "false"
+sources:
+  - https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/
+verified_on: "2026-11-11"
+verified: true
+notes: The docs give the config keys and the GF_<SECTION>_<KEY> rule for environment variables. The variable names here follow that rule.

@@ -1,0 +1,26 @@
+name: OpenSEO
+slug: openseo
+images:
+  - ghcr.io/every-app/open-seo-standalone
+  - ghcr.io/every-app/open-seo
+telemetry_default: "on"
+destinations:
+  - us.i.posthog.com
+what_is_sent: A self_host.heartbeat event with an install ID, version, deploy target, database backend and aggregate counts such as users and projects.
+disable:
+  - type: env
+    name: OPENSEO_TELEMETRY_DISABLED
+    value: "true"
+    accepted_values: ["1", "yes", "on"]
+    alternatives:
+      - name: DO_NOT_TRACK
+        value: "1"
+        accepted_values: ["true", "yes", "on"]
+    note: Any value other than 0, false, no or off opts out. Those four keep telemetry on.
+sources:
+  - https://github.com/every-app/open-seo/blob/main/src/server/lib/self-host-telemetry.ts
+  - https://github.com/every-app/open-seo/blob/main/src/shared/selfhost-checks.ts
+  - https://github.com/every-app/open-seo/blob/main/docs/SELF_HOSTING_DOCKER.md
+verified_on: "2026-11-11"
+verified: true
+notes: Taken from the project source. The README and Docker self-hosting guide do not mention telemetry.

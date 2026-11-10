@@ -1,0 +1,21 @@
+name: Immich machine learning
+slug: immich-machine-learning
+images:
+  - ghcr.io/immich-app/immich-machine-learning
+telemetry_default: "on"
+destinations:
+  - mobile.events.data.microsoft.com
+what_is_sent: Anonymous ONNX Runtime metric data, sent to Microsoft by the bundled onnxruntime library.
+disable:
+  - type: env
+    name: ORT_DISABLE_TELEMETRY
+    value: "1"
+    note: Only needed on versions before v3.3.6. The image sets it itself from v3.3.6.
+fixed_in: "3.3.6"
+sources:
+  - https://github.com/immich-app/immich/pull/32956
+  - https://github.com/immich-app/immich/releases/tag/v3.3.6
+  - https://github.com/immich-app/immich/issues/30729
+verified_on: "2026-11-11"
+verified: true
+notes: Caused by onnxruntime turning telemetry on by default in a recent release, so older Immich versions that bundle an older onnxruntime are not affected. phonehome cannot tell the version from a moving tag such as "release".

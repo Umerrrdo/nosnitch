@@ -1,0 +1,636 @@
+{
+  "schema_version": 1,
+  "apps": [
+    {
+      "name": "Activepieces",
+      "slug": "activepieces",
+      "images": [
+        "activepieces/activepieces",
+        "ghcr.io/activepieces/activepieces"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "A daily snapshot of the deployment shape such as replica counts, resource sizes, versions and settings. Product analytics adds tracked events and in-app page view counts.",
+      "disable": [
+        {
+          "type": "manual",
+          "instructions": "Turn off the deployment snapshot in the UI under Platform Admin > Account > Configurations. It does not read AP_TELEMETRY_ENABLED."
+        },
+        {
+          "type": "env",
+          "name": "AP_TELEMETRY_ENABLED",
+          "value": "false",
+          "optional": true,
+          "note": "Only seeds the product analytics setting the first time it is read. After that the UI toggle controls it."
+        }
+      ],
+      "sources": [
+        "https://www.activepieces.com/docs/install/configuration/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The deployment snapshot is documented as on by default. The docs do not state the default for product analytics or name the destination host."
+    },
+    {
+      "name": "Appsmith",
+      "slug": "appsmith",
+      "images": [
+        "appsmith/appsmith-ce",
+        "appsmith/appsmith-ee"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "api.mixpanel.com"
+      ],
+      "what_is_sent": "Anonymous navigation, click and successful backend-call events.",
+      "still_sent": "Keep-alive and server-setup pings are sent whether telemetry is on or off.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "APPSMITH_DISABLE_TELEMETRY",
+          "value": "true"
+        }
+      ],
+      "sources": [
+        "https://docs.appsmith.com/product/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "api.mixpanel.com is the endpoint shown in the sample payloads in the docs. It is shared with other products that use Mixpanel."
+    },
+    {
+      "name": "Arize Phoenix",
+      "slug": "arize-phoenix",
+      "images": [
+        "arizephoenix/phoenix"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Basic web analytics about interactions with the Phoenix web interface. No trace or evaluation data.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "PHOENIX_TELEMETRY_ENABLED",
+          "value": "false",
+          "alternatives": [
+            {
+              "name": "PHOENIX_ALLOW_EXTERNAL_RESOURCES",
+              "value": "false"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        "https://arize.com/docs/phoenix/self-hosting/security/privacy"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "PHOENIX_ALLOW_EXTERNAL_RESOURCES=false is meant for air-gapped installs and also blocks other external resources. The docs page does not name the destination host."
+    },
+    {
+      "name": "Chatwoot",
+      "slug": "chatwoot",
+      "images": [
+        "chatwoot/chatwoot"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "hub.chatwoot.com",
+        "hub.2.chatwoot.com"
+      ],
+      "what_is_sent": "Anonymised metadata such as aggregate record counts, inbox and conversation type distributions and enabled integrations, sent periodically.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "DISABLE_TELEMETRY",
+          "value": "true"
+        }
+      ],
+      "sources": [
+        "https://developers.chatwoot.com/self-hosted/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs say self-hosted installations periodically send this data and give the variable as the way to stop it. They do not use the word \"default\"."
+    },
+    {
+      "name": "Coder",
+      "slug": "coder",
+      "images": [
+        "ghcr.io/coder/coder"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Usage and deployment metadata such as feature and template details, plus the administrator's email. No secrets or end-user identities.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "CODER_TELEMETRY_ENABLE",
+          "value": "false"
+        },
+        {
+          "type": "flag",
+          "flag": "--telemetry=false"
+        }
+      ],
+      "sources": [
+        "https://coder.com/docs/admin/setup/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs page does not name the destination host."
+    },
+    {
+      "name": "Documenso",
+      "slug": "documenso",
+      "images": [
+        "documenso/documenso"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "App version, an installation ID and a node ID, sent on server startup and with a periodic heartbeat.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "DOCUMENSO_DISABLE_TELEMETRY",
+          "value": "true"
+        }
+      ],
+      "sources": [
+        "https://docs.documenso.com/docs/self-hosting/configuration/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs say \"our telemetry servers\" without naming a host, so no destination is listed."
+    },
+    {
+      "name": "Firezone",
+      "slug": "firezone",
+      "images": [
+        "firezone/firezone"
+      ],
+      "telemetry_default": "on",
+      "disable": [
+        {
+          "type": "env",
+          "name": "TELEMETRY_ENABLED",
+          "value": "false"
+        }
+      ],
+      "sources": [
+        "https://docs.firezone.dev/reference/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": false,
+      "notes": "Unverified. The source page could not be opened when this entry was written, so the default and the variable come from a search engine summary of that page. The image name was not checked either."
+    },
+    {
+      "name": "Grafana",
+      "slug": "grafana",
+      "images": [
+        "grafana/grafana",
+        "grafana/grafana-oss",
+        "grafana/grafana-enterprise"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "stats.grafana.org"
+      ],
+      "what_is_sent": "Anonymous usage statistics.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "GF_ANALYTICS_REPORTING_ENABLED",
+          "value": "false"
+        },
+        {
+          "type": "env",
+          "name": "GF_ANALYTICS_CHECK_FOR_UPDATES",
+          "value": "false",
+          "optional": true,
+          "note": "Stops the check for new Grafana versions."
+        },
+        {
+          "type": "env",
+          "name": "GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES",
+          "value": "false",
+          "optional": true,
+          "note": "Stops the check for new plugin versions."
+        },
+        {
+          "type": "config_file",
+          "path": "grafana.ini",
+          "key": "analytics.reporting_enabled",
+          "value": "false"
+        }
+      ],
+      "sources": [
+        "https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs give the config keys and the GF_<SECTION>_<KEY> rule for environment variables. The variable names here follow that rule."
+    },
+    {
+      "name": "Hasura GraphQL Engine",
+      "slug": "hasura",
+      "images": [
+        "hasura/graphql-engine"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "telemetry.hasura.io"
+      ],
+      "what_is_sent": "Anonymous, aggregate usage statistics from the server, Console and CLI, such as object counts and error events.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "HASURA_GRAPHQL_ENABLE_TELEMETRY",
+          "value": "false"
+        },
+        {
+          "type": "flag",
+          "flag": "--enable-telemetry=false"
+        }
+      ],
+      "sources": [
+        "https://hasura.io/docs/2.0/policies/telemetry/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs describe telemetry as something you opt out of. They do not use the word \"default\"."
+    },
+    {
+      "name": "Immich machine learning",
+      "slug": "immich-machine-learning",
+      "images": [
+        "ghcr.io/immich-app/immich-machine-learning"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "mobile.events.data.microsoft.com"
+      ],
+      "what_is_sent": "Anonymous ONNX Runtime metric data, sent to Microsoft by the bundled onnxruntime library.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "ORT_DISABLE_TELEMETRY",
+          "value": "1",
+          "note": "Only needed on versions before v3.3.6. The image sets it itself from v3.3.6."
+        }
+      ],
+      "fixed_in": "3.3.6",
+      "sources": [
+        "https://github.com/immich-app/immich/pull/32956",
+        "https://github.com/immich-app/immich/releases/tag/v3.3.6",
+        "https://github.com/immich-app/immich/issues/30729"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "Caused by onnxruntime turning telemetry on by default in a recent release, so older Immich versions that bundle an older onnxruntime are not affected. phonehome cannot tell the version from a moving tag such as \"release\"."
+    },
+    {
+      "name": "Langfuse",
+      "slug": "langfuse",
+      "images": [
+        "langfuse/langfuse",
+        "langfuse/langfuse-worker"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "eu.posthog.com"
+      ],
+      "what_is_sent": "High-level aggregated usage metrics such as version, project and trace totals. No raw traces, prompts or email addresses.",
+      "still_sent": "Enterprise self-hosted telemetry is used for license compliance and cannot be disabled.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "TELEMETRY_ENABLED",
+          "value": "false",
+          "note": "Set it on every Langfuse application container."
+        }
+      ],
+      "sources": [
+        "https://langfuse.com/self-hosting/security/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true
+    },
+    {
+      "name": "Lightdash",
+      "slug": "lightdash",
+      "images": [
+        "lightdash/lightdash"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "analytics.lightdash.com"
+      ],
+      "what_is_sent": "Usage events tied to organization, project, user and content UUIDs, plus some resource titles, descriptions and short error messages. No SQL, query results or credentials.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "RUDDERSTACK_ANALYTICS_DISABLED",
+          "value": "true",
+          "note": "Set it on every container that runs Lightdash code (backend, scheduler, workers)."
+        }
+      ],
+      "sources": [
+        "https://docs.lightdash.com/self-host/data-flows-and-telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true
+    },
+    {
+      "name": "Meilisearch",
+      "slug": "meilisearch",
+      "images": [
+        "getmeili/meilisearch"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Anonymized system, performance and usage metrics, sent in batches through Segment.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "MEILI_NO_ANALYTICS",
+          "value": "true"
+        },
+        {
+          "type": "flag",
+          "flag": "--no-analytics"
+        }
+      ],
+      "sources": [
+        "https://www.meilisearch.com/docs/learn/resources/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs name Segment as the collector but give no hostname, so no destination is listed."
+    },
+    {
+      "name": "n8n",
+      "slug": "n8n",
+      "images": [
+        "n8nio/n8n",
+        "docker.n8n.io/n8nio/n8n"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Anonymous usage telemetry, sent mostly at event time, plus execution counts and an instance pulse every 6 hours.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "N8N_DIAGNOSTICS_ENABLED",
+          "value": "false"
+        },
+        {
+          "type": "env",
+          "name": "N8N_VERSION_NOTIFICATIONS_ENABLED",
+          "value": "false",
+          "optional": true,
+          "note": "Stops the version update check."
+        },
+        {
+          "type": "env",
+          "name": "N8N_TEMPLATES_ENABLED",
+          "value": "false",
+          "optional": true,
+          "note": "Stops workflow template fetching. Templates stop working in the UI."
+        }
+      ],
+      "sources": [
+        "https://docs.n8n.io/hosting/securing/telemetry-opt-out",
+        "https://docs.n8n.io/hosting/configuration/configuration-examples/isolation/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs do not name the destination hosts, so none are listed."
+    },
+    {
+      "name": "Netdata",
+      "slug": "netdata",
+      "images": [
+        "netdata/netdata"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Anonymous system, configuration and alert/chart count data on agent start, stop and fatal errors, plus product usage events from the dashboard.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "DISABLE_TELEMETRY",
+          "value": "1",
+          "alternatives": [
+            {
+              "name": "DO_NOT_TRACK",
+              "value": "1"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        "https://learn.netdata.cloud/docs/netdata-agent/configuration/anonymous-telemetry-events"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs name a Netdata cloud function and PostHog as the receivers but give no hostnames, so no destination is listed."
+    },
+    {
+      "name": "Novu",
+      "slug": "novu",
+      "images": [
+        "ghcr.io/novuhq/novu/api"
+      ],
+      "telemetry_default": "unknown",
+      "what_is_sent": "Usage statistics such as event, integration, organization, subscriber, topic, user and workflow counts.",
+      "still_sent": "An hourly keep-alive ping (hostname, instance ID, IP address, platform, release, memory figures) is sent whether telemetry is on or off.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "NOVU_TELEMETRY",
+          "value": "false"
+        },
+        {
+          "type": "manual",
+          "instructions": "Telemetry can also be turned off in the Admin Settings."
+        }
+      ],
+      "sources": [
+        "https://docs.novu.co/community/self-hosting-novu/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": false,
+      "notes": "Unverified. The docs do not state the default, do not name the destination host, and do not say which container reads NOVU_TELEMETRY. The image name was not checked against the official compose file."
+    },
+    {
+      "name": "OpenSEO",
+      "slug": "openseo",
+      "images": [
+        "ghcr.io/every-app/open-seo-standalone",
+        "ghcr.io/every-app/open-seo"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "us.i.posthog.com"
+      ],
+      "what_is_sent": "A self_host.heartbeat event with an install ID, version, deploy target, database backend and aggregate counts such as users and projects.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "OPENSEO_TELEMETRY_DISABLED",
+          "value": "true",
+          "accepted_values": [
+            "1",
+            "yes",
+            "on"
+          ],
+          "alternatives": [
+            {
+              "name": "DO_NOT_TRACK",
+              "value": "1",
+              "accepted_values": [
+                "true",
+                "yes",
+                "on"
+              ]
+            }
+          ],
+          "note": "Any value other than 0, false, no or off opts out. Those four keep telemetry on."
+        }
+      ],
+      "sources": [
+        "https://github.com/every-app/open-seo/blob/main/src/server/lib/self-host-telemetry.ts",
+        "https://github.com/every-app/open-seo/blob/main/src/shared/selfhost-checks.ts",
+        "https://github.com/every-app/open-seo/blob/main/docs/SELF_HOSTING_DOCKER.md"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "Taken from the project source. The README and Docker self-hosting guide do not mention telemetry."
+    },
+    {
+      "name": "PowerSync Service",
+      "slug": "powersync",
+      "images": [
+        "journeyapps/powersync-service"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Usage counters and gauges such as bytes synced and replication lag, collected every few minutes and tied to a random instance UUID.",
+      "disable": [
+        {
+          "type": "config_file",
+          "path": "service.yaml",
+          "key": "telemetry.disable_telemetry_sharing",
+          "value": "true"
+        }
+      ],
+      "sources": [
+        "https://docs.powersync.com/maintenance-ops/self-hosting/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs say the metrics go to PowerSync without naming a host. The opt-out is a config key, so phonehome cannot write a fix for it."
+    },
+    {
+      "name": "Qdrant",
+      "slug": "qdrant",
+      "images": [
+        "qdrant/qdrant"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Anonymized system information, performance timings and counters, and critical error reports such as backtraces.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "QDRANT__TELEMETRY_DISABLED",
+          "value": "true"
+        },
+        {
+          "type": "flag",
+          "flag": "--disable-telemetry"
+        },
+        {
+          "type": "config_file",
+          "path": "config/config.yaml",
+          "key": "telemetry_disabled",
+          "value": "true"
+        }
+      ],
+      "sources": [
+        "https://qdrant.tech/documentation/ops-configuration/usage-statistics/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The docs page does not name the destination host."
+    },
+    {
+      "name": "SigNoz",
+      "slug": "signoz",
+      "images": [
+        "signoz/signoz",
+        "signoz/query-service"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "Deployment platform, OS, build version and variant, counts of dashboards, alerts and users, and ingested data volume. User emails too unless identity collection is turned off.",
+      "disable": [
+        {
+          "type": "manual",
+          "instructions": "v0.88.0 and later: set statsreporter.enabled to false in the SigNoz configuration. To keep reporting but drop emails, set statsreporter.collect.identities to false."
+        },
+        {
+          "type": "manual",
+          "instructions": "Before v0.88.0: set TELEMETRY_ENABLED=false in the query-service environment and restart query-service."
+        }
+      ],
+      "sources": [
+        "https://signoz.io/docs/telemetry/"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The opt-out depends on the version, so phonehome does not write a fix for it. The docs do not name the destination host."
+    },
+    {
+      "name": "TimescaleDB",
+      "slug": "timescaledb",
+      "images": [
+        "timescale/timescaledb",
+        "timescale/timescaledb-ha"
+      ],
+      "telemetry_default": "on",
+      "what_is_sent": "An anonymous JSON usage report with the instance's versions, operating system, database feature counts and job statistics.",
+      "disable": [
+        {
+          "type": "config_file",
+          "path": "postgresql.conf",
+          "key": "timescaledb.telemetry_level",
+          "value": "off"
+        }
+      ],
+      "sources": [
+        "https://www.tigerdata.com/docs/self-hosted/latest/configuration/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true,
+      "notes": "The default telemetry level is \"basic\". The opt-out is a PostgreSQL setting, so phonehome cannot write a fix for it. The docs page does not name the destination host."
+    },
+    {
+      "name": "Weaviate",
+      "slug": "weaviate",
+      "images": [
+        "semitechnologies/weaviate",
+        "cr.weaviate.io/semitechnologies/weaviate"
+      ],
+      "telemetry_default": "on",
+      "destinations": [
+        "telemetry.weaviate.io"
+      ],
+      "what_is_sent": "Server version, OS and architecture, module names, object and collection counts, cluster details and client library usage. No data objects, collection names or property names.",
+      "disable": [
+        {
+          "type": "env",
+          "name": "DISABLE_TELEMETRY",
+          "value": "true",
+          "note": "Set it on every node."
+        }
+      ],
+      "sources": [
+        "https://docs.weaviate.io/deploy/configuration/telemetry"
+      ],
+      "verified_on": "2026-11-11",
+      "verified": true
+    }
+  ]
+}
