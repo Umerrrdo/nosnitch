@@ -31,7 +31,7 @@ export function collectDestinations(results: ServiceResult[]): Map<string, strin
 export function renderBlocklist(results: ServiceResult[], format: BlocklistFormat = "hosts"): string {
   const comment = format === "adguard" ? "!" : "#";
   const hosts = collectDestinations(results);
-  const lines = [`${comment} phonehome blocklist (${format}): documented telemetry destinations for the apps in your compose file`];
+  const lines = [`${comment} nosnitch blocklist (${format}): documented telemetry destinations for the apps in your compose file`];
   if (hosts.size === 0) lines.push(`${comment} No documented destinations for these apps.`);
   for (const [host, apps] of hosts) {
     lines.push(`${comment} ${apps.join(", ")}`);

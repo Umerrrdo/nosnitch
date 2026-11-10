@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { parseEnvironment, parseEnvFile, interpolate, loadCompose } from "../dist/compose.js";
 
 function project(files) {
-  const dir = mkdtempSync(join(tmpdir(), "phonehome-"));
+  const dir = mkdtempSync(join(tmpdir(), "nosnitch-"));
   for (const [name, text] of Object.entries(files)) writeFileSync(join(dir, name), text);
   return dir;
 }

@@ -5,7 +5,7 @@ import http from "node:http";
 import https from "node:https";
 import net from "node:net";
 
-export const MARKER = "PHONEHOME_NETWORK_ATTEMPT";
+export const MARKER = "NOSNITCH_NETWORK_ATTEMPT";
 
 function block(what) {
   return function blocked() {

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/Umerrrdo/phonehome/blob/main/db/schema.json",
-  "title": "phonehome app entry",
+  "$id": "https://github.com/Umerrrdo/nosnitch/blob/main/db/schema.json",
+  "title": "nosnitch app entry",
   "type": "object",
   "additionalProperties": false,
   "required": ["name", "slug", "images", "telemetry_default", "disable", "sources", "verified_on", "verified"],

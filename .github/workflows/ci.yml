@@ -21,8 +21,8 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node: [20, 22]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node }}
           cache: npm
@@ -34,8 +34,8 @@ jobs:
   sources:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -46,15 +46,15 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: docker build -t phonehome .
+      - uses: actions/checkout@v5
+      - run: docker build -t nosnitch .
       - name: Scan the example file inside the image
         run: |
           set +e
-          docker run --rm --network none -v "$PWD/test/fixtures:/work:ro" phonehome scan example-compose.yml
+          docker run --rm --network none -v "$PWD/test/fixtures:/work:ro" nosnitch scan example-compose.yml
           test $? -eq 1
       - name: Write the override from inside the image
         run: |
           mkdir demo && cp test/fixtures/example-compose.yml demo/docker-compose.yml && cp test/fixtures/langfuse.env demo/
-          docker run --rm --network none --user "$(id -u):$(id -g)" -v "$PWD/demo:/work" phonehome scan --fix || true
-          docker compose -f demo/docker-compose.yml -f demo/compose.phonehome.override.yml config --quiet
+          docker run --rm --network none --user "$(id -u):$(id -g)" -v "$PWD/demo:/work" nosnitch scan --fix || true
+          docker compose -f demo/docker-compose.yml -f demo/compose.nosnitch.override.yml config --quiet

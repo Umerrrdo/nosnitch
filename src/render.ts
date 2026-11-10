@@ -78,10 +78,10 @@ export function renderScan(results: ServiceResult[], warnings: string[]): string
   if (unknownImages.length > 0) {
     const names = [...new Set(unknownImages.map((r) => shortImage(r.image)))];
     out.push(`Not in database (${names.length}): ${names.join(", ")}`);
-    out.push(`  phonehome does not guess. Know how one of these behaves? Add it: ${CONTRIBUTING_URL}`);
+    out.push(`  nosnitch does not guess. Know how one of these behaves? Add it: ${CONTRIBUTING_URL}`);
   }
   for (const r of unknownImages.filter((x) => x.possible_match)) {
-    out.push(`${r.service}: looks like a mirror of ${r.possible_match}. Mirrors are not matched automatically. Run: phonehome check ${r.possible_match}`);
+    out.push(`${r.service}: looks like a mirror of ${r.possible_match}. Mirrors are not matched automatically. Run: nosnitch check ${r.possible_match}`);
   }
   for (const r of results.filter((x) => x.status === "unresolved-image")) {
     out.push(`${r.service}: the image name ${r.image} uses a variable that is not set. Set it in your shell or in the .env file next to the compose file, then scan again.`);
@@ -92,10 +92,10 @@ export function renderScan(results: ServiceResult[], warnings: string[]): string
 
 export function renderCheck(r: ServiceResult): string {
   if (r.status === "not-in-database" && r.possible_match) {
-    return `${r.image}: not in database.\nIt looks like a mirror of ${r.possible_match}. Mirrors are not matched automatically. Run: phonehome check ${r.possible_match}`;
+    return `${r.image}: not in database.\nIt looks like a mirror of ${r.possible_match}. Mirrors are not matched automatically. Run: nosnitch check ${r.possible_match}`;
   }
   if (r.status === "not-in-database") {
-    return`${r.image}: not in database.\nphonehome does not guess. Add it: ${CONTRIBUTING_URL}`;
+    return`${r.image}: not in database.\nnosnitch does not guess. Add it: ${CONTRIBUTING_URL}`;
   }
   const out: string[] = [];
   out.push(`${r.app} (${r.image})`);

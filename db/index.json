@@ -441,7 +441,7 @@
       ],
       "verified_on": "2026-11-11",
       "verified": true,
-      "notes": "Caused by onnxruntime turning telemetry on by default in a recent release, so older Immich versions that bundle an older onnxruntime are not affected. phonehome cannot tell the version from a moving tag such as \"release\"."
+      "notes": "Caused by onnxruntime turning telemetry on by default in a recent release, so older Immich versions that bundle an older onnxruntime are not affected. nosnitch cannot tell the version from a moving tag such as \"release\"."
     },
     {
       "name": "Infisical",
@@ -596,7 +596,7 @@
       ],
       "verified_on": "2026-11-11",
       "verified": true,
-      "notes": "The opt-out is a command-line flag or a config key, not an environment variable, so phonehome detects the flag but cannot write a fix."
+      "notes": "The opt-out is a command-line flag or a config key, not an environment variable, so nosnitch detects the flag but cannot write a fix."
     },
     {
       "name": "Mattermost",
@@ -622,7 +622,7 @@
       ],
       "verified_on": "2026-11-11",
       "verified": true,
-      "notes": "The telemetry page gives only the System Console paths, so no environment variable is listed and phonehome cannot write a fix. It does not name the destination hosts."
+      "notes": "The telemetry page gives only the System Console paths, so no environment variable is listed and nosnitch cannot write a fix. It does not name the destination hosts."
     },
     {
       "name": "Meilisearch",
@@ -965,7 +965,7 @@
       ],
       "verified_on": "2026-11-11",
       "verified": true,
-      "notes": "The docs say the metrics go to PowerSync without naming a host. The opt-out is a config key, so phonehome cannot write a fix for it."
+      "notes": "The docs say the metrics go to PowerSync without naming a host. The opt-out is a config key, so nosnitch cannot write a fix for it."
     },
     {
       "name": "Qdrant",
@@ -1053,7 +1053,7 @@
       ],
       "verified_on": "2026-11-11",
       "verified": true,
-      "notes": "The opt-out depends on the version, so phonehome does not write a fix for it. The docs do not name the destination host."
+      "notes": "The opt-out depends on the version, so nosnitch does not write a fix for it. The docs do not name the destination host."
     },
     {
       "name": "Supabase (self-hosted)",
@@ -1100,7 +1100,7 @@
       ],
       "verified_on": "2026-11-11",
       "verified": true,
-      "notes": "The default telemetry level is \"basic\". The opt-out is a PostgreSQL setting, so phonehome cannot write a fix for it. The docs page does not name the destination host."
+      "notes": "The default telemetry level is \"basic\". The opt-out is a PostgreSQL setting, so nosnitch cannot write a fix for it. The docs page does not name the destination host."
     },
     {
       "name": "Traefik",

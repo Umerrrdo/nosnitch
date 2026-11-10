@@ -20,7 +20,7 @@ async function probe(url) {
         method,
         redirect: "follow",
         signal: AbortSignal.timeout(TIMEOUT_MS),
-        headers: { "user-agent": "phonehome-source-check" },
+        headers: { "user-agent": "nosnitch-source-check" },
       });
       if (res.ok) return { state: "ok", detail: String(res.status) };
       if (method === "HEAD") continue;

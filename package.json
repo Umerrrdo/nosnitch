@@ -1,20 +1,16 @@
 {
-  "name": "phonehome",
+  "name": "nosnitch",
   "version": "0.1.0",
   "description": "Find out which apps in your Docker Compose file send telemetry by default, where it goes, and how to turn it off.",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "phonehome": "dist/cli.js"
+    "nosnitch": "dist/cli.js"
   },
   "files": [
-    "TESTING.md",
     "dist",
     "db/index.json",
-    "db/schema.json",
-    "README.md",
-    "CONTRIBUTING.md",
-    "LICENSE"
+    "db/schema.json"
   ],
   "engines": {
     "node": ">=20"
@@ -30,7 +26,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Umerrrdo/phonehome.git"
+    "url": "git+https://github.com/Umerrrdo/nosnitch.git"
+  },
+  "homepage": "https://github.com/Umerrrdo/nosnitch#readme",
+  "bugs": {
+    "url": "https://github.com/Umerrrdo/nosnitch/issues"
   },
   "keywords": [
     "telemetry",

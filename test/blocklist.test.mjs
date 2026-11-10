@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const cli = join(root, "dist", "cli.js");
 const example = join(root, "test", "fixtures", "example-compose.yml");
-const env = { ...process.env, PHONEHOME_CACHE_DIR: mkdtempSync(join(tmpdir(), "phonehome-cache-")) };
+const env = { ...process.env, NOSNITCH_CACHE_DIR: mkdtempSync(join(tmpdir(), "nosnitch-cache-")) };
 const run = (args) => spawnSync(process.execPath, [cli, ...args], { encoding: "utf8", env });
 const rules = (out) => out.split(/\r?\n/).filter((l) => l !== "" && !l.startsWith("#") && !l.startsWith("!"));
 

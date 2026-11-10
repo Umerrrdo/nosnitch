@@ -10,12 +10,12 @@ import { interpolate } from "../dist/compose.js";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const cli = join(root, "dist", "cli.js");
-const env = { ...process.env, PHONEHOME_CACHE_DIR: mkdtempSync(join(tmpdir(), "phonehome-cache-")) };
+const env = { ...process.env, NOSNITCH_CACHE_DIR: mkdtempSync(join(tmpdir(), "nosnitch-cache-")) };
 delete env.N8N_VERSION;
 delete env.MY_IMAGE;
 
 /** Creates a temp project. Keys are relative paths, values are file contents (string or Buffer). */
-function project(files, prefix = "phonehome-edge-") {
+function project(files, prefix = "nosnitch-edge-") {
   const dir = mkdtempSync(join(tmpdir(), prefix));
   for (const [name, content] of Object.entries(files)) {
     mkdirSync(dirname(join(dir, name)), { recursive: true });
@@ -150,7 +150,7 @@ test("no file given and none in the folder", () => {
   const res = run(["scan"], dir);
   assert.equal(res.code, 2);
   assert.match(res.stderr, /No compose file given and none found/);
-  assert.match(res.stderr, /phonehome scan docker-compose\.yml/);
+  assert.match(res.stderr, /nosnitch scan docker-compose\.yml/);
   noStack(res);
 });
 
@@ -326,15 +326,15 @@ test("a file that reuses one anchor hundreds of times", () => {
 // ---- paths ----
 
 test("paths with spaces, for the compose file and the env_file", () => {
-  const dir = project({ "my stack/docker compose.yml": `${N8N_ON}    env_file:\n      - ./env files/app one.env\n`, "my stack/env files/app one.env": "N8N_DIAGNOSTICS_ENABLED=false\n" }, "phonehome edge ");
+  const dir = project({ "my stack/docker compose.yml": `${N8N_ON}    env_file:\n      - ./env files/app one.env\n`, "my stack/env files/app one.env": "N8N_DIAGNOSTICS_ENABLED=false\n" }, "nosnitch edge ");
   const file = join(dir, "my stack", "docker compose.yml");
   assert.equal(scanJson(["scan", file]).by.n8n.status, "disabled");
 
-  const fixDir = project({ "my stack/docker compose.yml": N8N_ON }, "phonehome edge ");
+  const fixDir = project({ "my stack/docker compose.yml": N8N_ON }, "nosnitch edge ");
   const res = run(["scan", join(fixDir, "my stack", "docker compose.yml"), "--fix"]);
   assert.equal(res.code, 1);
-  assert.match(res.stdout, /docker compose -f ".*docker compose\.yml" -f ".*compose\.phonehome\.override\.yml" up -d/);
-  assert.equal(run(["scan", join(fixDir, "my stack", "docker compose.yml"), join(fixDir, "my stack", "compose.phonehome.override.yml")]).code, 0);
+  assert.match(res.stdout, /docker compose -f ".*docker compose\.yml" -f ".*compose\.nosnitch\.override\.yml" up -d/);
+  assert.equal(run(["scan", join(fixDir, "my stack", "docker compose.yml"), join(fixDir, "my stack", "compose.nosnitch.override.yml")]).code, 0);
 });
 
 test("relative paths and ./ prefixes", () => {
@@ -436,7 +436,7 @@ test("some services opted out and some not: only the rest are fixed", () => {
   assert.equal(res.by.web.status, "disabled");
   assert.equal(res.by.worker.status, "on");
   assert.equal(res.by.wrong.status, "on");
-  const after = scanJson(["scan", join(dir, "compose.yml"), join(dir, "compose.phonehome.override.yml")]);
+  const after = scanJson(["scan", join(dir, "compose.yml"), join(dir, "compose.nosnitch.override.yml")]);
   assert.equal(after.code, 0);
   assert.equal(after.by.wrong.status, "disabled", "the override replaces a wrong value");
 });
@@ -454,10 +454,10 @@ test("every usage error says what went wrong and what to do, with no stack trace
   const dir = project({ "docker-compose.yml": N8N_ON });
   const cases = [
     [["frobnicate"], /Unknown command: frobnicate/, /The commands are: scan, blocklist, check, list/],
-    [["docker-compose.yml"], /Unknown command: docker-compose\.yml/, /Did you mean: phonehome scan docker-compose\.yml/],
-    [["scan", "--nope"], /Unknown option: --nope/, /phonehome --help/],
-    [["check"], /check needs an image name/, /phonehome check n8nio\/n8n/],
-    [["check", "docker-compose.yml"], /is a file, and check takes an image name/, /phonehome scan docker-compose\.yml/],
+    [["docker-compose.yml"], /Unknown command: docker-compose\.yml/, /Did you mean: nosnitch scan docker-compose\.yml/],
+    [["scan", "--nope"], /Unknown option: --nope/, /nosnitch --help/],
+    [["check"], /check needs an image name/, /nosnitch check n8nio\/n8n/],
+    [["check", "docker-compose.yml"], /is a file, and check takes an image name/, /nosnitch scan docker-compose\.yml/],
     [["blocklist", "docker-compose.yml", "--format", "xml"], /Unknown blocklist format: xml/, /hosts, pihole, adguard/],
     [["blocklist", "docker-compose.yml", "--format"], /--format needs a value/, /--format pihole/],
     [["scan", "missing.yml"], /File not found: missing\.yml/, /Check the path/],
@@ -480,7 +480,7 @@ test("--debug adds the stack trace", () => {
 });
 
 test("a failed --update explains itself and points at the offline path", () => {
-  const res = spawnSync(process.execPath, [cli, "list", "--update"], { encoding: "utf8", env: { ...env, PHONEHOME_UPDATE_URL: "http://127.0.0.1:9/index.json" } });
+  const res = spawnSync(process.execPath, [cli, "list", "--update"], { encoding: "utf8", env: { ...env, NOSNITCH_UPDATE_URL: "http://127.0.0.1:9/index.json" } });
   assert.equal(res.status, 2);
   assert.match(res.stderr, /Could not download the database/);
   assert.match(res.stderr, /without --update/);

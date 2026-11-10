@@ -14,4 +14,4 @@ sources:
   - https://docs.mattermost.com/administration-guide/manage/telemetry.html
 verified_on: "2026-11-11"
 verified: true
-notes: The telemetry page gives only the System Console paths, so no environment variable is listed and phonehome cannot write a fix. It does not name the destination hosts.
+notes: The telemetry page gives only the System Console paths, so no environment variable is listed and nosnitch cannot write a fix. It does not name the destination hosts.

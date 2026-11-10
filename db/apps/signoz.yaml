@@ -14,4 +14,4 @@ sources:
   - https://signoz.io/docs/telemetry/
 verified_on: "2026-11-11"
 verified: true
-notes: The opt-out depends on the version, so phonehome does not write a fix for it. The docs do not name the destination host.
+notes: The opt-out depends on the version, so nosnitch does not write a fix for it. The docs do not name the destination host.

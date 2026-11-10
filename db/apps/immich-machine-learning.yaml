@@ -18,4 +18,4 @@ sources:
   - https://github.com/immich-app/immich/issues/30729
 verified_on: "2026-11-11"
 verified: true
-notes: Caused by onnxruntime turning telemetry on by default in a recent release, so older Immich versions that bundle an older onnxruntime are not affected. phonehome cannot tell the version from a moving tag such as "release".
+notes: Caused by onnxruntime turning telemetry on by default in a recent release, so older Immich versions that bundle an older onnxruntime are not affected. nosnitch cannot tell the version from a moving tag such as "release".

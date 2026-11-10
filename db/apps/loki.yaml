@@ -17,4 +17,4 @@ sources:
   - https://grafana.com/docs/loki/latest/configure/
 verified_on: "2026-11-11"
 verified: true
-notes: The opt-out is a command-line flag or a config key, not an environment variable, so phonehome detects the flag but cannot write a fix.
+notes: The opt-out is a command-line flag or a config key, not an environment variable, so nosnitch detects the flag but cannot write a fix.

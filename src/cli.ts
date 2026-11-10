@@ -6,27 +6,27 @@ import { parseArgs } from "node:util";
 import { BLOCKLIST_FORMATS, isBlocklistFormat, renderBlocklist } from "./blocklist.js";
 import { DEFAULT_COMPOSE_FILES, displayPath, findComposeFile, loadCompose } from "./compose.js";
 import { loadDatabase } from "./db.js";
-import { PhonehomeError, UsageError } from "./errors.js";
+import { NosnitchError, UsageError } from "./errors.js";
 import { writeOverride } from "./fix.js";
 import { renderCheck, renderList, renderScan } from "./render.js";
 import { checkImage, exitCodeFor, scanServices } from "./scanner.js";
 
-const HELP = `phonehome: which apps in your Docker Compose file send telemetry by default?
+const HELP = `nosnitch: which apps in your Docker Compose file send telemetry by default?
 
 Usage:
-  phonehome scan [compose-file] [more-files...]   table of services, defaults, destinations and fixes
-  phonehome scan [compose-file] --fix             write compose.phonehome.override.yml (your file is never edited)
-  phonehome blocklist [compose-file]              telemetry destinations in hosts-file format
-  phonehome check <image>                         look up one image
-  phonehome list                                  list every app in the database
+  nosnitch scan [compose-file] [more-files...]   table of services, defaults, destinations and fixes
+  nosnitch scan [compose-file] --fix             write compose.nosnitch.override.yml (your file is never edited)
+  nosnitch blocklist [compose-file]              telemetry destinations in hosts-file format
+  nosnitch check <image>                         look up one image
+  nosnitch list                                  list every app in the database
 
-Without a compose file, phonehome looks in the current folder for
+Without a compose file, nosnitch looks in the current folder for
 ${DEFAULT_COMPOSE_FILES.join(", ")}.
 
 Options:
   --json       machine-readable output (scan, check, list)
   --format     blocklist format: hosts (default), pihole (plain domains) or adguard (||domain^)
-  --update     download the latest database first (the only network call phonehome ever makes)
+  --update     download the latest database first (the only network call nosnitch ever makes)
   --debug      show the full stack trace when something fails
   -h, --help
   -v, --version
@@ -51,7 +51,7 @@ function composeFiles(args: string[], command: string): string[] {
     if (found) return [found];
     throw new UsageError(
       `No compose file given and none found in ${process.cwd()}.`,
-      `Pass one, for example: phonehome ${command} docker-compose.yml\nphonehome looks for: ${DEFAULT_COMPOSE_FILES.join(", ")}.`,
+      `Pass one, for example: nosnitch ${command} docker-compose.yml\nnosnitch looks for: ${DEFAULT_COMPOSE_FILES.join(", ")}.`,
     );
   }
   return args.map((arg) => (existsSync(arg) && statSync(arg).isDirectory() ? (findComposeFile(arg) ?? arg) : arg));
@@ -83,7 +83,7 @@ function parse(argv: string[]) {
       throw new UsageError(`Unknown option: ${option}`);
     }
     if (e.code === "ERR_PARSE_ARGS_INVALID_OPTION_VALUE") {
-      throw new UsageError(`--format needs a value: ${BLOCKLIST_FORMATS.join(", ")}.`, "For example: phonehome blocklist docker-compose.yml --format pihole");
+      throw new UsageError(`--format needs a value: ${BLOCKLIST_FORMATS.join(", ")}.`, "For example: nosnitch blocklist docker-compose.yml --format pihole");
     }
     throw err;
   }
@@ -92,8 +92,8 @@ function parse(argv: string[]) {
 async function main(argv: string[]): Promise<number> {
   const nodeMajor = Number(process.versions.node.split(".")[0]);
   if (nodeMajor < 20) {
-    throw new PhonehomeError(
-      `phonehome needs Node 20 or newer. This is Node ${process.versions.node}.`,
+    throw new NosnitchError(
+      `nosnitch needs Node 20 or newer. This is Node ${process.versions.node}.`,
       "Install a current Node from https://nodejs.org, or use the Docker image (see the README).",
     );
   }
@@ -112,7 +112,7 @@ async function main(argv: string[]): Promise<number> {
     const looksLikeFile = /\.ya?ml$/i.test(command) || existsSync(command);
     throw new UsageError(
       `Unknown command: ${command}`,
-      looksLikeFile ? `Did you mean: phonehome scan ${quote(command)}` : `The commands are: ${COMMANDS.join(", ")}. Run phonehome --help for details.`,
+      looksLikeFile ? `Did you mean: nosnitch scan ${quote(command)}` : `The commands are: ${COMMANDS.join(", ")}. Run nosnitch --help for details.`,
     );
   }
 
@@ -150,7 +150,7 @@ async function main(argv: string[]): Promise<number> {
     case "blocklist": {
       const format = values.format ?? "hosts";
       if (!isBlocklistFormat(format)) {
-        throw new UsageError(`Unknown blocklist format: ${format}`, `Use one of: ${BLOCKLIST_FORMATS.join(", ")}. For example: phonehome blocklist docker-compose.yml --format pihole`);
+        throw new UsageError(`Unknown blocklist format: ${format}`, `Use one of: ${BLOCKLIST_FORMATS.join(", ")}. For example: nosnitch blocklist docker-compose.yml --format pihole`);
       }
       const project = loadCompose(composeFiles(rest, "blocklist"));
       console.log(renderBlocklist(scanServices(project.services, db.apps), format));
@@ -158,9 +158,9 @@ async function main(argv: string[]): Promise<number> {
     }
     case "check": {
       const image = rest[0];
-      if (!image) throw new UsageError("check needs an image name.", "For example: phonehome check n8nio/n8n");
+      if (!image) throw new UsageError("check needs an image name.", "For example: nosnitch check n8nio/n8n");
       if (/\.ya?ml$/i.test(image) && existsSync(image)) {
-        throw new UsageError(`${image} is a file, and check takes an image name.`, `To scan a compose file run: phonehome scan ${quote(image)}`);
+        throw new UsageError(`${image} is a file, and check takes an image name.`, `To scan a compose file run: nosnitch scan ${quote(image)}`);
       }
       const result = checkImage(image, db.apps);
       console.log(values.json ? JSON.stringify(result, null, 2) : renderCheck(result));
@@ -181,14 +181,14 @@ main(process.argv.slice(2)).then(
   },
   (err: unknown) => {
     process.exitCode = 2;
-    if (err instanceof PhonehomeError) {
-      console.error(`phonehome: ${err.message}`);
+    if (err instanceof NosnitchError) {
+      console.error(`nosnitch: ${err.message}`);
       if (err.hint) console.error(err.hint);
     } else {
       // Not an error we planned for. Still no stack trace unless asked.
       const message = err instanceof Error ? err.message : String(err);
-      console.error(`phonehome: something went wrong: ${message}`);
-      console.error("Run it again with --debug for details, and please report it: https://github.com/Umerrrdo/phonehome/issues");
+      console.error(`nosnitch: something went wrong: ${message}`);
+      console.error("Run it again with --debug for details, and please report it: https://github.com/Umerrrdo/nosnitch/issues");
     }
     if (debug && err instanceof Error && err.stack) console.error(`\n${err.stack}`);
   },

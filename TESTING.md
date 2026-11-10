@@ -2,13 +2,13 @@
 
 What was tested before the first release, what broke, and what was changed. Dated 2026-11-11.
 
-The aim was simple: someone who has never seen phonehome installs it, points it at their compose file, and nothing goes wrong.
+The aim was simple: someone who has never seen nosnitch installs it, points it at their compose file, and nothing goes wrong.
 
 ## Summary
 
 | Area | Result |
 | --- | --- |
-| Fresh install with `npx github:Umerrrdo/phonehome` on Windows | Works, including from a folder with spaces in its name |
+| Fresh install with `npx github:Umerrrdo/nosnitch` on Windows | Works, including from a folder with spaces in its name |
 | Docker image, built from the Dockerfile | Works, including with `--network none` |
 | 32 official compose files from real projects | All scan, fix and blocklist cleanly after the fixes below |
 | 7 of the maintainer's own compose files | All scan cleanly (no known apps in them) |
@@ -23,20 +23,18 @@ npm install
 npm test                  # 92 tests: build, then node --test
 npm run validate:db       # every entry against db/schema.json
 npm run check:sources     # every source URL (uses the network)
-docker build -t phonehome .
-docker run --rm --network none -v "$PWD/test/fixtures:/work:ro" phonehome scan example-compose.yml
+docker build -t nosnitch .
+docker run --rm --network none -v "$PWD/test/fixtures:/work:ro" nosnitch scan example-compose.yml
 ```
 
 ## 1. Fresh install
 
-- Cloned the repository into an empty temp folder and ran the README quickstart exactly as written, with a cleared npm cache. `scan`, `scan --fix`, a re-scan with the override, `blocklist --format pihole`, `check` and `list` all worked.
+- Cloned the repository into an empty temp folder and ran the tool with `npx github:Umerrrdo/nosnitch`, with a cleared npm cache. This was done before the package was on npm and before the project was renamed from its working title, phonehome. `scan`, `scan --fix`, a re-scan with the override, `blocklist --format pihole`, `check` and `list` all worked.
 - Repeated it from a folder named `ph npx 2` to cover a path with spaces.
 - Built the Docker image and ran `scan`, `scan` with no file name, and `scan --fix` against a mounted folder.
 
 README corrections that came out of this:
 
-- The quickstart now says git is needed, because `npx github:...` clones the repository.
-- It now says the first run is slower, because npx builds the tool.
 - The Docker section explains `--user` on Linux for `--fix`. Without it the override file would belong to the container's user.
 
 ## 2. Real compose files
@@ -56,7 +54,7 @@ Seven compose files from other projects on the test machine were scanned as well
 | Crash: "Excessive alias count indicates a resource exhaustion attack" | Sentry's compose file reuses YAML anchors hundreds of times | Raised the YAML alias limit |
 | Nested variable defaults were left unresolved, such as `${A:-${B:-4}}` | Langfuse | Rewrote variable interpolation to handle nesting and every Compose operator |
 | The official Langfuse compose file was not recognised at all | It uses `docker.langfuse.com/langfuse/langfuse`, the database only had the Docker Hub name | Added both registry names |
-| Images with an unset variable turned into nonsense like `mattermost/:` or `-node:latest` | Mattermost, n8n, PostHog, Sentry | The name is now shown as written. If only the tag is unknown the app is still matched. If the name itself is unknown, phonehome says which service it is and asks for the variable to be set |
+| Images with an unset variable turned into nonsense like `mattermost/:` or `-node:latest` | Mattermost, n8n, PostHog, Sentry | The name is now shown as written. If only the tag is unknown the app is still matched. If the name itself is unknown, nosnitch says which service it is and asks for the variable to be set |
 | One warning per service for the same missing `env_file`, each with a long absolute path | Chatwoot, Kodus, OneCLI and others | One warning per file, listing the services that use it |
 | 40 warnings that `extends` is not followed | Appwrite, PostHog | `extends` is now followed, in the same file and across files |
 | `include:` was ignored silently | Found while reading the Compose spec against the code | `include` is now followed |
@@ -69,7 +67,7 @@ Seven compose files from other projects on the test machine were scanned as well
 For every file where `--fix` wrote an override, the test ran:
 
 ```sh
-docker compose -f <file> -f compose.phonehome.override.yml config --format json --no-interpolate
+docker compose -f <file> -f compose.nosnitch.override.yml config --format json --no-interpolate
 ```
 
 and then read the merged result to confirm each variable landed on the service it was meant for. Docker Compose 2 (Docker 29.8.2) accepted all of them: 16 files, 22 variables. A second scan with both files then reported every one of those services as disabled.
@@ -114,7 +112,7 @@ Each of these has a test in [test/edge.test.mjs](test/edge.test.mjs).
 
 - Windows 11, Node 22: full suite, by hand and through `npm test`.
 - Linux (Alpine containers), Node 20.20 and Node 22.23: full suite. One test is skipped there because it passes a backslash path on the command line, which only means something on Windows.
-- Node 18: phonehome stops with "phonehome needs Node 20 or newer" instead of failing in some odd way.
+- Node 18: nosnitch stops with "nosnitch needs Node 20 or newer" instead of failing in some odd way.
 - CI now runs the suite on Ubuntu, Windows and macOS, each with Node 20 and 22. A separate job builds the Docker image, scans inside it with `--network none`, writes an override from inside the container and checks it with `docker compose config`.
 
 Not done by hand: macOS, and Node 20 on Windows. Both are covered by the CI matrix, and the CI run for these changes passed on all six combinations, along with the Docker job and the source URL check.
@@ -131,7 +129,7 @@ Shown three ways:
 
 Every error now has two parts: what went wrong, and what to do. No stack trace is printed unless `--debug` is passed. An unexpected error (a bug) also prints one line and asks for a report with `--debug`.
 
-Covered by tests: unknown command, a file name typed where the command should be ("Did you mean: phonehome scan ..."), unknown option, `check` with no image, `check` given a compose file, an unknown blocklist format, `--format` with no value, file not found, a folder with no compose file, no file given and none found, an override that cannot be written, a failed `--update`, and running on an old Node.
+Covered by tests: unknown command, a file name typed where the command should be ("Did you mean: nosnitch scan ..."), unknown option, `check` with no image, `check` given a compose file, an unknown blocklist format, `--format` with no value, file not found, a folder with no compose file, no file given and none found, an override that cannot be written, a failed `--update`, and running on an old Node.
 
 One wording change: a file with no services used to produce a warning and exit 0. It is now exit 2, because it is almost always the wrong file.
 
@@ -143,8 +141,7 @@ One wording change: a file with no services used to produce a warning and exit 0
 
 ## Known limits
 
-- phonehome reads the compose file, not the running containers. A variable set some other way (a Docker secret, a mounted config file, an orchestrator) is not seen.
-- Apps whose opt-out is a config file or a UI switch stay flagged, because phonehome cannot look inside them.
+- nosnitch reads the compose file, not the running containers. A variable set some other way (a Docker secret, a mounted config file, an orchestrator) is not seen.
+- Apps whose opt-out is a config file or a UI switch stay flagged, because nosnitch cannot look inside them.
 - `fixed_in` only helps when the tag is a full version number. `latest`, `release` or `v3` stay flagged.
 - `docker compose config` was run without interpolation, so it proves the override is valid and merges onto the right service, not that the whole project starts.
-- The npm package name is still open. `npx phonehome` runs a different, unrelated package.

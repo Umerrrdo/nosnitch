@@ -2,7 +2,7 @@ import type { ComposeService } from "./compose.js";
 import { findApp, findMirroredApp, isAtLeastVersion, parseImage } from "./matcher.js";
 import type { AppEntry, EnvMethod, EnvPair, TelemetryDefault } from "./types.js";
 
-export const CONTRIBUTING_URL = "https://github.com/Umerrrdo/phonehome/blob/main/CONTRIBUTING.md";
+export const CONTRIBUTING_URL = "https://github.com/Umerrrdo/nosnitch/blob/main/CONTRIBUTING.md";
 
 export type Status =
   /** Telemetry is on by default and no opt-out was detected. */
@@ -35,7 +35,7 @@ export interface ServiceResult {
   fix_env: { name: string; value: string }[];
   /** Variables that stop other outbound calls such as update checks. */
   optional_env: { name: string; value: string; note?: string }[];
-  /** Steps phonehome cannot apply for you. */
+  /** Steps nosnitch cannot apply for you. */
   manual: string[];
   /** Opt-outs found in the compose file. */
   detected: string[];
@@ -151,7 +151,7 @@ function nearMisses(service: string, method: EnvMethod, env: Map<string, string 
     if (!env.has(pair.name)) continue;
     const actual = env.get(pair.name);
     if (actual === undefined) {
-      out.push(`service "${service}": ${pair.name} is passed through from the host without a value, so phonehome cannot tell if it is set. Give it a value in the compose file.`);
+      out.push(`service "${service}": ${pair.name} is passed through from the host without a value, so nosnitch cannot tell if it is set. Give it a value in the compose file.`);
     } else if (valueMatches(actual.trim().replace(QUOTED, "$2").trim(), pair)) {
       out.push(
         `service "${service}": ${pair.name} is set to [${actual}] with extra quote characters or spaces. Compose passes them to the app as part of the value, so it does not count as ${pair.value}. Write it as ${pair.name}=${pair.value}.`,
@@ -205,7 +205,7 @@ export function scanServices(services: ComposeService[], apps: AppEntry[]): Serv
   });
 }
 
-/** Looks up one image with nothing set, as `phonehome check` does. */
+/** Looks up one image with nothing set, as `nosnitch check` does. */
 export function checkImage(image: string, apps: AppEntry[]): ServiceResult {
   const app = findApp(image, apps);
   if (!app) return unmatched(image, image, "not-in-database", findMirroredApp(image, apps)?.images[0] ?? null);

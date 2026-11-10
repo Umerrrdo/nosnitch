@@ -11,7 +11,7 @@ const cli = join(root, "dist", "cli.js");
 const guard = pathToFileURL(join(root, "scripts", "no-network.mjs")).href;
 const fixture = (name) => join(root, "test", "fixtures", name);
 // An empty cache dir so a database downloaded on this machine cannot change the results.
-const env = { ...process.env, PHONEHOME_CACHE_DIR: mkdtempSync(join(tmpdir(), "phonehome-cache-")) };
+const env = { ...process.env, NOSNITCH_CACHE_DIR: mkdtempSync(join(tmpdir(), "nosnitch-cache-")) };
 
 export function run(args, { network = false } = {}) {
   const nodeArgs = network ? [cli, ...args] : ["--import", guard, cli, ...args];
@@ -78,21 +78,21 @@ test("no network calls in default mode", () => {
   // Every run() above already goes through the guard. This checks the marker explicitly.
   for (const args of [["scan", fixture("example-compose.yml")], ["check", "n8nio/n8n"], ["list"], ["--help"]]) {
     const res = run(args);
-    assert.doesNotMatch(res.stderr + res.stdout, /PHONEHOME_NETWORK_ATTEMPT/, args.join(" "));
+    assert.doesNotMatch(res.stderr + res.stdout, /NOSNITCH_NETWORK_ATTEMPT/, args.join(" "));
   }
 });
 
 test("the network guard really catches network use", () => {
-  const dir = mkdtempSync(join(tmpdir(), "phonehome-guard-"));
+  const dir = mkdtempSync(join(tmpdir(), "nosnitch-guard-"));
   const script = join(dir, "probe.mjs");
   writeFileSync(script, 'import net from "node:net";\ntry { net.connect(80, "127.0.0.1"); } catch {}\ntry { await fetch("http://127.0.0.1"); } catch {}\n');
   const res = spawnSync(process.execPath, ["--import", guard, script], { encoding: "utf8" });
-  assert.match(res.stderr, /PHONEHOME_NETWORK_ATTEMPT: net\.connect/);
-  assert.match(res.stderr, /PHONEHOME_NETWORK_ATTEMPT: fetch/);
+  assert.match(res.stderr, /NOSNITCH_NETWORK_ATTEMPT: net\.connect/);
+  assert.match(res.stderr, /NOSNITCH_NETWORK_ATTEMPT: fetch/);
 });
 
 test("--update is the only path that reaches for the network", () => {
   const res = run(["list", "--update"]);
   assert.equal(res.code, 2);
-  assert.match(res.stderr, /PHONEHOME_NETWORK_ATTEMPT: fetch/);
+  assert.match(res.stderr, /NOSNITCH_NETWORK_ATTEMPT: fetch/);
 });

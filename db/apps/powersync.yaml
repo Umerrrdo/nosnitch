@@ -13,4 +13,4 @@ sources:
   - https://docs.powersync.com/maintenance-ops/self-hosting/telemetry
 verified_on: "2026-11-11"
 verified: true
-notes: The docs say the metrics go to PowerSync without naming a host. The opt-out is a config key, so phonehome cannot write a fix for it.
+notes: The docs say the metrics go to PowerSync without naming a host. The opt-out is a config key, so nosnitch cannot write a fix for it.

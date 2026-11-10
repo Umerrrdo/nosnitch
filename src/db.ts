@@ -11,7 +11,7 @@ export const bundledDbPath = join(packageRoot, "db", "index.json");
 export const schemaPath = join(packageRoot, "db", "schema.json");
 
 export function cacheDbPath(): string {
-  const base = process.env.PHONEHOME_CACHE_DIR ?? join(homedir(), ".cache", "phonehome");
+  const base = process.env.NOSNITCH_CACHE_DIR ?? join(homedir(), ".cache", "nosnitch");
   return join(base, "index.json");
 }
 

@@ -65,7 +65,7 @@ verified: true
 
 ```yaml
 disable:
-  # An environment variable. phonehome detects it and --fix writes it.
+  # An environment variable. nosnitch detects it and --fix writes it.
   - type: env
     name: EXAMPLE_TELEMETRY_DISABLED
     value: "true"
@@ -76,13 +76,13 @@ disable:
     note: Set it on every container.  # optional
 
   # A variable that stops other outbound calls (update checks and so on), not telemetry.
-  # Shown by `phonehome check`, never required for an OK, never written by --fix.
+  # Shown by `nosnitch check`, never required for an OK, never written by --fix.
   - type: env
     name: EXAMPLE_UPDATE_CHECK
     value: "false"
     optional: true
 
-  # A command-line flag. phonehome detects it in command and entrypoint.
+  # A command-line flag. nosnitch detects it in command and entrypoint.
   - type: flag
     flag: --no-telemetry
 

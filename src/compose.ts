@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, isAbsolute, relative, resolve } from "node:path";
 import { parse } from "yaml";
-import { PhonehomeError } from "./errors.js";
+import { NosnitchError } from "./errors.js";
 
 export interface ComposeService {
   name: string;
@@ -190,35 +190,35 @@ export function displayPath(path: string): string {
 function readComposeFile(file: string): Record<string, unknown> {
   const shown = displayPath(file);
   if (!existsSync(file)) {
-    throw new PhonehomeError(`File not found: ${shown}`, "Check the path. Run phonehome from the folder that holds your compose file, or pass the full path.");
+    throw new NosnitchError(`File not found: ${shown}`, "Check the path. Run nosnitch from the folder that holds your compose file, or pass the full path.");
   }
   if (statSync(file).isDirectory()) {
-    throw new PhonehomeError(
+    throw new NosnitchError(
       `${shown} is a folder and has no compose file in it.`,
-      `Pass the compose file itself. phonehome looks for: ${DEFAULT_COMPOSE_FILES.join(", ")}.`,
+      `Pass the compose file itself. nosnitch looks for: ${DEFAULT_COMPOSE_FILES.join(", ")}.`,
     );
   }
   let text: string;
   try {
     text = readFileSync(file, "utf8").replace(/^﻿/, "");
   } catch (err) {
-    throw new PhonehomeError(`Could not read ${shown}: ${(err as Error).message}`, "Check that the file exists and that you have permission to read it.");
+    throw new NosnitchError(`Could not read ${shown}: ${(err as Error).message}`, "Check that the file exists and that you have permission to read it.");
   }
   if (text.trim() === "") {
-    throw new PhonehomeError(`${shown} is empty.`, "A compose file needs a services: section. Check that you passed the right file.");
+    throw new NosnitchError(`${shown} is empty.`, "A compose file needs a services: section. Check that you passed the right file.");
   }
   let doc: unknown;
   try {
     // Large official compose files (Sentry, for one) reuse anchors hundreds of times.
     doc = parse(text, { merge: true, maxAliasCount: 100000 });
   } catch (err) {
-    throw new PhonehomeError(
+    throw new NosnitchError(
       `${shown} is not valid YAML.\n${(err as Error).message.trim()}`,
       `Fix the line shown above. "docker compose -f ${shown} config" reports the same problem.`,
     );
   }
   if (typeof doc !== "object" || doc === null || Array.isArray(doc)) {
-    throw new PhonehomeError(`${shown} does not look like a Compose file.`, "A compose file is a YAML document with a top-level services: section.");
+    throw new NosnitchError(`${shown} does not look like a Compose file.`, "A compose file is a YAML document with a top-level services: section.");
   }
   return doc as Record<string, unknown>;
 }
@@ -344,7 +344,7 @@ export function loadCompose(files: string[]): ComposeProject {
 
   if (ctx.merged.size === 0) {
     const shown = paths.map(displayPath).join(", ");
-    throw new PhonehomeError(
+    throw new NosnitchError(
       `No services found in ${shown}, so there is nothing to scan.`,
       "Is this a Docker Compose file? It needs a top-level services: section with at least one service.",
     );

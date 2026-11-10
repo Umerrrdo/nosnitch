@@ -14,4 +14,4 @@ sources:
   - https://www.tigerdata.com/docs/self-hosted/latest/configuration/telemetry
 verified_on: "2026-11-11"
 verified: true
-notes: The default telemetry level is "basic". The opt-out is a PostgreSQL setting, so phonehome cannot write a fix for it. The docs page does not name the destination host.
+notes: The default telemetry level is "basic". The opt-out is a PostgreSQL setting, so nosnitch cannot write a fix for it. The docs page does not name the destination host.
