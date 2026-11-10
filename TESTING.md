@@ -117,7 +117,7 @@ Each of these has a test in [test/edge.test.mjs](test/edge.test.mjs).
 - Node 18: phonehome stops with "phonehome needs Node 20 or newer" instead of failing in some odd way.
 - CI now runs the suite on Ubuntu, Windows and macOS, each with Node 20 and 22. A separate job builds the Docker image, scans inside it with `--network none`, writes an override from inside the container and checks it with `docker compose config`.
 
-Not done by hand: macOS, and Node 20 on Windows. Both are covered by the CI matrix only, and the CI run for these changes had not been looked at when this was written.
+Not done by hand: macOS, and Node 20 on Windows. Both are covered by the CI matrix, and the CI run for these changes passed on all six combinations, along with the Docker job and the source URL check.
 
 ## 6. No network in default mode
 
