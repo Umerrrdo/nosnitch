@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
+import { BLOCKLIST_FORMATS, isBlocklistFormat, renderBlocklist } from "./blocklist.js";
 import { loadCompose } from "./compose.js";
 import { loadDatabase } from "./db.js";
 import { writeOverride } from "./fix.js";
@@ -14,11 +15,13 @@ const HELP = `phonehome: which apps in your Docker Compose file send telemetry b
 Usage:
   phonehome scan <compose-file> [more-files...]   table of services, defaults, destinations and fixes
   phonehome scan <compose-file> --fix             write compose.phonehome.override.yml (your file is never edited)
+  phonehome blocklist <compose-file>              telemetry destinations in hosts-file format
   phonehome check <image>                         look up one image
   phonehome list                                  list every app in the database
 
 Options:
   --json       machine-readable output (scan, check, list)
+  --format     blocklist format: hosts (default), pihole (plain domains) or adguard (||domain^)
   --update     download the latest database first (the only network call phonehome ever makes)
   -h, --help
   -v, --version
@@ -49,6 +52,7 @@ async function main(argv: string[]): Promise<number> {
     options: {
       json: { type: "boolean", default: false },
       fix: { type: "boolean", default: false },
+      format: { type: "string", default: "hosts" },
       update: { type: "boolean", default: false },
       help: { type: "boolean", short: "h", default: false },
       version: { type: "boolean", short: "v", default: false },
@@ -94,6 +98,14 @@ async function main(argv: string[]): Promise<number> {
         }
       }
       return exitCode;
+    }
+    case "blocklist": {
+      const files = requireFiles(rest, "blocklist");
+      const format = values.format ?? "hosts";
+      if (!isBlocklistFormat(format)) throw new UsageError(`unknown format "${format}", use one of: ${BLOCKLIST_FORMATS.join(", ")}`);
+      const project = loadCompose(files);
+      console.log(renderBlocklist(scanServices(project.services, db.apps), format));
+      return 0;
     }
     case "check": {
       const image = rest[0];
