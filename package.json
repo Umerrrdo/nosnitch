@@ -20,6 +20,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build",
     "build:db": "node scripts/build-db.mjs",
     "validate:db": "node scripts/build-db.mjs --check",
     "check:sources": "node scripts/check-sources.mjs",
