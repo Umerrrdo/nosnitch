@@ -5,6 +5,7 @@
     "moduleResolution": "NodeNext",
     "outDir": "dist",
     "rootDir": "src",
+    "newLine": "lf",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
