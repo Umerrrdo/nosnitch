@@ -8,6 +8,7 @@
     "phonehome": "dist/cli.js"
   },
   "files": [
+    "TESTING.md",
     "dist",
     "db/index.json",
     "db/schema.json",
